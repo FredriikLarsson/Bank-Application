@@ -97,7 +97,14 @@ public class Customer {
 	 * Skapa ett nytt konto i kontolistan
 	 */
 	public void createNewAccount() {
-		accounts.add(new Account());
+		accounts.add(new SavingsAccount());
+	}
+	
+	/*
+	 * Skapa ett nytt kreditkonto i kontolistan
+	 */
+	public void createNewCreditAccount() {
+		accounts.add(new CreditAccount());
 	}
 
 	/*
