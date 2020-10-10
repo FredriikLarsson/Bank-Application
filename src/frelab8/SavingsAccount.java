@@ -6,7 +6,7 @@ public class SavingsAccount extends Account {
 	private boolean freeWithdrawal = true;
 	
 	public SavingsAccount() {
-		super("Savings Account");
+		super("Sparkonto");
 	}
 	
 	/*
@@ -17,9 +17,11 @@ public class SavingsAccount extends Account {
 	public boolean setBalanceWithdrawal(double amount) {
 		//Kontrollerar ifall kontot fortfarande har ett fritt uttag kvar
 		if(freeWithdrawal == true) {
-			if(amount <= super.getBalance()) {
+			if(amount * (withdrawalFee/100) <= super.getBalance()) {
 				//Anropar superklassens setbalance metod för den privata balance variabeln i superklassen
-				super.setBalance(amount);
+				super.setBalance(amount+(amount*(withdrawalFee/100)));
+				super.addTransaction(amount * (-1), super.getBalance());
+				freeWithdrawal = false;
 				return true;
 			} else {
 				return false;
@@ -28,6 +30,7 @@ public class SavingsAccount extends Account {
 			//Kontrollerar ifall uttagssumman + uttagsavgiften är lika med eller mindre än balansen på kontot
 			if((amount*(withdrawalFee/100) <= super.getBalance())) {
 				super.setBalance(amount + (amount * (withdrawalFee/100)));
+				super.addTransaction(amount * (-1), super.getBalance());
 				return true;
 			} else {
 				return false;
@@ -35,9 +38,9 @@ public class SavingsAccount extends Account {
 		}
 	}
 	
-	public double getInterestRate() {
+	/*public double getInterestRate() {
 		return interestRate;
-	}
+	}*/
 	
 	/*
 	 * Skickar ut den specifika kontoinformation för sparkonton
@@ -45,6 +48,14 @@ public class SavingsAccount extends Account {
 	 */
 	public String getSpecificAccountInfo() {
 		return "" + super.getBalance() * (interestRate/100);
+	}
+	
+	/*
+	 * Hämtar information om kontot
+	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + årsräntan
+	 */
+	public String getAccountInfo() {
+		return super.getAccountNumber() + " " + super.getBalance() + " kr " + "Sparkonto" + " " + interestRate + " %";
 	}
 	
 	/*

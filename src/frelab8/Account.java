@@ -1,6 +1,7 @@
 package frelab8;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /*
  * Klass för att skapa och hantera konton som ska finnas med i banksystemet.
@@ -16,7 +17,7 @@ public abstract class Account {
 	private final int ACCOUNT_NUMBER; // Kontonummer bör inte kunna ändras efter skapandet av kontot därav "final"
 	private double balance;
 	private final String ACCOUNT_TYPE; // Med antagandet att kontotyp på ett konto aldrig ska kunna ändras ifall fler kontotyper tillkommer, därav final.
-	private ArrayList<String> transactionHistory = new ArrayList<String>();
+	private ArrayList<Transaction> transactionHistory = new ArrayList<Transaction>();
 
 	
 	/*
@@ -59,7 +60,17 @@ public abstract class Account {
 	 * @param amount är beloppet som ska sättas in
 	 */
 	public void setBalanceDeposit(double amount) {
-		balance += amount;      
+		balance += amount;
+		transactionHistory.add(new Transaction(amount, balance));
+	}
+	
+	/*
+	 * Adderar en ny transaktion i form av ett Transaction objekt i arraylistan transactionhistory
+	 * @param amount är uttaget eller insättningen som görs 
+	 * @param balance är balansen efter att uttaget eller instättningen gjorts
+	 */
+	public void addTransaction(double amount, double balance) {
+		transactionHistory.add(new Transaction(amount, balance));
 	}
 
 	
@@ -72,15 +83,11 @@ public abstract class Account {
 	}
 
 	
-	/*
-	 * Hämtar information om kontot
-	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + årsräntan
-	 */
-	public String getAccountInfo() {
-		return ACCOUNT_NUMBER + " " + balance + " kr " + ACCOUNT_TYPE + " " + getInterestRate() + " %";
-	}
+	public abstract String getAccountInfo();
 	
-	public abstract double getInterestRate();
+	//public abstract double getInterestRate();
+	
+	//public abstract double getBalanceSpecific();
 
 	
 	/*
@@ -89,6 +96,18 @@ public abstract class Account {
 	 */
 	public String getClosingAccountInfo() {
 		return ACCOUNT_NUMBER + " " + balance + " kr " + ACCOUNT_TYPE + " " + getSpecificAccountInfo() + " kr";
+	}
+	
+	/*
+	 * Hämtar och konverterar transaktionslistan till en ny arraylista med transaktionsinformation(strängar)
+	 * @return en ny arraylista konverterad till String
+	 */
+	public ArrayList<String> getTransactionHistory() {
+		ArrayList<String> transactionList = new ArrayList<String>();
+		for (int i = 0; i < transactionHistory.size(); i++) {
+			transactionList.add(transactionHistory.get(i).getTransactionInfo());
+		}
+		return transactionList;
 	}
 	
 	public abstract String getSpecificAccountInfo();

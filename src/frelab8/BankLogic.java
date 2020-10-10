@@ -122,6 +122,22 @@ public class BankLogic {
 			return customer.getNewAccountNumber();
 		}
 	}
+	
+	/*
+	 * Skapa ett nytt kreditkonto till en specifik kund
+	 * @param idNumber är kundens personnummer
+	 * @return kontonumret på det nyss skapade nya kontot
+	 */
+	public int createCreditAccount(String idNumber) {
+		Customer customer = getCustomerObject(idNumber);
+		//Kontrollerar ifall kunden existerar i banksystemet
+		if(customer == null) {
+			return -1;
+		} else {
+			customer.createNewCreditAccount();
+			return customer.getNewAccountNumber();
+		}
+	}
 
 	/*
 	 * Hämtar information om ett specifikt konto
@@ -200,6 +216,20 @@ public class BankLogic {
 		} else {
 			// Returnerar false ifall uttagsbeloppet är <= 0
 			return false;
+		}
+	}
+	
+	/*
+	 * Hämtar en lista med alla transaktioner på ett specifikt konto
+	 * @param idNumber är kontoägarens personnummer, @param accountId är kontots kontonummer
+	 * @return är en arrayList med alla transaktioner konverterad till strängar
+	 */
+	public ArrayList<String> getTransactions(String idNumber, int accountId) {
+		Account account = getAccountObject(idNumber, accountId);
+		if(account == null) {
+			return null;
+		} else {
+			return account.getTransactionHistory();
 		}
 	}
 

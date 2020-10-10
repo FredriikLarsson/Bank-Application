@@ -8,7 +8,7 @@ public class CreditAccount extends Account {
 	
 	
 	public CreditAccount() {
-		super("Credit Account");
+		super("Kreditkonto");
 	}
 	
 	/*
@@ -31,20 +31,42 @@ public class CreditAccount extends Account {
 	public boolean setBalanceWithdrawal(double amount) {
 		//Kontrollerar ifall uttagssumman är större än nuvarande balansen och mindre än den kvarvarande krediten på kontot
 		if(amount > super.getBalance() && amount <= super.getBalance() + (creditLimit - creditUsed)) {
-			creditUsed = creditUsed - (amount - super.getBalance());
+			creditUsed = creditUsed + (amount - super.getBalance());
 			super.setBalance(super.getBalance());
+			super.addTransaction(amount * (-1), creditUsed * (-1));
 			return true;
 		//Eller ifall summan är mindre än nuvarande saldot på kontot
 		} else if(amount <= super.getBalance()){
 			super.setBalance(amount);
+			super.addTransaction(amount * (-1), super.getBalance());
 			return false;
 		} else {
 			return false;
 		}
 	}
 	
-	public double getInterestRate() {
+	/*public double getInterestRate() {
 		return interestRate;
+	}*/
+	
+	/*
+	 * Hämtar information om kontot
+	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + årsräntan
+	 */
+	public String getAccountInfo() {
+		if(creditUsed > 0) {
+			return super.getAccountNumber() + " " + getAccountBalance() + " kr " + "Kreditkonto" + " " + loanFee + " %";
+		} else {
+			return super.getAccountNumber() + " " + getAccountBalance() + " kr " + "Kreditkonto" + " " + interestRate + " %";
+		}
+	}
+	
+	private double getAccountBalance() {
+		if(creditUsed > 0) {
+			return creditUsed*(-1);
+		} else {
+			return super.getBalance();
+		}
 	}
 	
 	/*public double calculateRate() {
