@@ -15,9 +15,9 @@ public class CreditAccount extends Account {
 	 * Skickar ut den specifika kontoinformation för kreditkonton
 	 * @return konverterad sträng från double av den specifika årsräntan eller låneräntan för kreditkonton
 	 */
-	public String getSpecificAccountInfo() {
+	private String getSpecificAccountInfo() {
 		if(creditUsed > 0) {
-			return "" + creditUsed * (loanFee / 100);
+			return "" + (creditUsed * (loanFee / 100))*(-1);
 		} else {
 			return "" + super.getBalance() * (interestRate / 100);
 		}
@@ -39,7 +39,7 @@ public class CreditAccount extends Account {
 		} else if(amount <= super.getBalance()){
 			super.setBalance(amount);
 			super.addTransaction(amount * (-1), super.getBalance());
-			return false;
+			return true;
 		} else {
 			return false;
 		}
@@ -67,6 +67,14 @@ public class CreditAccount extends Account {
 		} else {
 			return super.getBalance();
 		}
+	}
+	
+	/*
+	 * Hämtar information om kontot vid borttagning av kontot
+	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + kalkylerad årsränta i kronor
+	 */
+	public String getClosingAccountInfo() {
+		return super.getAccountNumber() + " " + getAccountBalance() + " kr " + super.getAccountType() + " " + getSpecificAccountInfo() + " kr";
 	}
 	
 	/*public double calculateRate() {

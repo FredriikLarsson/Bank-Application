@@ -15,11 +15,12 @@ public class SavingsAccount extends Account {
 	 * @return sant/falskt ifall uttaget lyckades eller inte
 	 */
 	public boolean setBalanceWithdrawal(double amount) {
+		double amountWithFee = amount + (amount * (withdrawalFee/100));
 		//Kontrollerar ifall kontot fortfarande har ett fritt uttag kvar
 		if(freeWithdrawal == true) {
-			if(amount * (withdrawalFee/100) <= super.getBalance()) {
+			if(amount <= super.getBalance()) {
 				//Anropar superklassens setbalance metod för den privata balance variabeln i superklassen
-				super.setBalance(amount+(amount*(withdrawalFee/100)));
+				super.setBalance(amount);
 				super.addTransaction(amount * (-1), super.getBalance());
 				freeWithdrawal = false;
 				return true;
@@ -28,9 +29,9 @@ public class SavingsAccount extends Account {
 			}
 		} else {
 			//Kontrollerar ifall uttagssumman + uttagsavgiften är lika med eller mindre än balansen på kontot
-			if((amount*(withdrawalFee/100) <= super.getBalance())) {
-				super.setBalance(amount + (amount * (withdrawalFee/100)));
-				super.addTransaction(amount * (-1), super.getBalance());
+			if((amountWithFee <= super.getBalance())) {
+				super.setBalance(amountWithFee);
+				super.addTransaction(amountWithFee * (-1), super.getBalance());
 				return true;
 			} else {
 				return false;
@@ -46,7 +47,7 @@ public class SavingsAccount extends Account {
 	 * Skickar ut den specifika kontoinformation för sparkonton
 	 * @return konverterad sträng från double av den specifika årsräntan för sparkonton
 	 */
-	public String getSpecificAccountInfo() {
+	private String getSpecificAccountInfo() {
 		return "" + super.getBalance() * (interestRate/100);
 	}
 	
@@ -56,6 +57,14 @@ public class SavingsAccount extends Account {
 	 */
 	public String getAccountInfo() {
 		return super.getAccountNumber() + " " + super.getBalance() + " kr " + "Sparkonto" + " " + interestRate + " %";
+	}
+	
+	/*
+	 * Hämtar information om kontot vid borttagning av kontot
+	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + kalkylerad årsränta i kronor
+	 */
+	public String getClosingAccountInfo() {
+		return super.getAccountNumber() + " " + super.getBalance() + " kr " + super.getAccountType() + " " + getSpecificAccountInfo() + " kr";
 	}
 	
 	/*

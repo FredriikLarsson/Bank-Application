@@ -90,13 +90,8 @@ public abstract class Account {
 	//public abstract double getBalanceSpecific();
 
 	
-	/*
-	 * Hämtar information om kontot vid borttagning av kontot
-	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + kalkylerad årsränta i kronor
-	 */
-	public String getClosingAccountInfo() {
-		return ACCOUNT_NUMBER + " " + balance + " kr " + ACCOUNT_TYPE + " " + getSpecificAccountInfo() + " kr";
-	}
+
+	public abstract String getClosingAccountInfo();
 	
 	/*
 	 * Hämtar och konverterar transaktionslistan till en ny arraylista med transaktionsinformation(strängar)
@@ -110,7 +105,11 @@ public abstract class Account {
 		return transactionList;
 	}
 	
-	public abstract String getSpecificAccountInfo();
+	//public abstract String getSpecificAccountInfo();
+	
+	public String getAccountType() {
+		return ACCOUNT_TYPE;
+	}
 
 	//public abstract double calculateRate();
 
