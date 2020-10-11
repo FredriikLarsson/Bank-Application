@@ -1,10 +1,16 @@
 package frelab8;
 
+import java.math.BigDecimal;
+
 public class CreditAccount extends Account {
-	private static double interestRate = 0.5;
-	private static double loanFee = 7.0;
-	private int creditLimit = 5000;
-	private double creditUsed = 0;
+	//private static String interestRate = "0.5";
+	//private static String loanFee = "7.0";
+	//private int creditLimit = 5000;
+	//private String creditUsed = "0";
+	private BigDecimal creditLimit = new BigDecimal("5000");
+	private static BigDecimal interestRate = new BigDecimal("0.5");
+	private static BigDecimal loanFee = new BigDecimal("7.0");
+	private BigDecimal creditUsed = BigDecimal.ZERO;
 	
 	
 	public CreditAccount() {
@@ -16,10 +22,11 @@ public class CreditAccount extends Account {
 	 * @return konverterad sträng från double av den specifika årsräntan eller låneräntan för kreditkonton
 	 */
 	private String getSpecificAccountInfo() {
-		if(creditUsed > 0) {
-			return "" + (creditUsed * (loanFee / 100))*(-1);
+		BigDecimal interestRateTemp = interestRate.divide(new BigDecimal("100"));
+		if(creditUsed.compareTo(BigDecimal.ZERO) > 0) {
+			return "" + (creditUsed.multiply(loanFee.divide(new BigDecimal("100"))).toString());
 		} else {
-			return "" + super.getBalance() * (interestRate / 100);
+			return "" + interestRateTemp.multiply(super.getBalance());
 		}
 	}
 	
@@ -29,16 +36,18 @@ public class CreditAccount extends Account {
 	 * @return sant/falskt ifall uttaget lyckades eller inte
 	 */
 	public boolean setBalanceWithdrawal(double amount) {
+		BigDecimal amountTemp = new BigDecimal(amount);
+		BigDecimal creditLeft = creditLimit.subtract(creditUsed);
 		//Kontrollerar ifall uttagssumman är större än nuvarande balansen och mindre än den kvarvarande krediten på kontot
-		if(amount > super.getBalance() && amount <= super.getBalance() + (creditLimit - creditUsed)) {
-			creditUsed = creditUsed + (amount - super.getBalance());
-			super.setBalance(super.getBalance());
-			super.addTransaction(amount * (-1), creditUsed * (-1));
+		if(((amountTemp.compareTo(super.getBalance())) > 0) && (amountTemp.compareTo(creditLeft.add(super.getBalance())) <= 0 )) {
+			creditUsed = creditUsed.add(amountTemp.subtract(super.getBalance()));
+			super.setBalance(super.getBalance().toString());
+			super.addTransaction(amountTemp.negate().toString(), creditUsed.negate().toString());
 			return true;
 		//Eller ifall summan är mindre än nuvarande saldot på kontot
-		} else if(amount <= super.getBalance()){
-			super.setBalance(amount);
-			super.addTransaction(amount * (-1), super.getBalance());
+		} else if(amountTemp.compareTo(super.getBalance()) <= 0){
+			super.setBalance(amountTemp.toString());
+			super.addTransaction(amountTemp.negate().toString(), super.getBalance().toString());
 			return true;
 		} else {
 			return false;
@@ -54,18 +63,18 @@ public class CreditAccount extends Account {
 	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + årsräntan
 	 */
 	public String getAccountInfo() {
-		if(creditUsed > 0) {
-			return super.getAccountNumber() + " " + getAccountBalance() + " kr " + "Kreditkonto" + " " + loanFee + " %";
+		if(creditUsed.compareTo(BigDecimal.ZERO) > 0) {
+			return super.getAccountNumber() + " " + getAccountBalance() + " kr " + "Kreditkonto" + " " + loanFee.toString() + " %";
 		} else {
-			return super.getAccountNumber() + " " + getAccountBalance() + " kr " + "Kreditkonto" + " " + interestRate + " %";
+			return super.getAccountNumber() + " " + getAccountBalance() + " kr " + "Kreditkonto" + " " + interestRate.toString() + " %";
 		}
 	}
 	
-	private double getAccountBalance() {
-		if(creditUsed > 0) {
-			return creditUsed*(-1);
+	private String getAccountBalance() {
+		if(creditUsed.compareTo(BigDecimal.ZERO) > 0) {
+			return creditUsed.negate().toString();
 		} else {
-			return super.getBalance();
+			return super.getBalance().toString();
 		}
 	}
 	

@@ -1,9 +1,13 @@
 package frelab8;
 
+import java.math.BigDecimal;
+
 public class SavingsAccount extends Account {
-	private static double interestRate = 1.0;
-	private double withdrawalFee = 2.0;
+	//private static double interestRate = 1.0;
+	//private double withdrawalFee = 2.0;
 	private boolean freeWithdrawal = true;
+	private static BigDecimal interestRate = new BigDecimal("1.0");
+	private BigDecimal withdrawalFee = new BigDecimal("2.0");
 	
 	public SavingsAccount() {
 		super("Sparkonto");
@@ -15,13 +19,16 @@ public class SavingsAccount extends Account {
 	 * @return sant/falskt ifall uttaget lyckades eller inte
 	 */
 	public boolean setBalanceWithdrawal(double amount) {
-		double amountWithFee = amount + (amount * (withdrawalFee/100));
+		//double amountWithFee = amount + (amount * (withdrawalFee/100));
+		BigDecimal amountTemp = new BigDecimal(amount);
+		BigDecimal amountWithFee = amountTemp.add(amountTemp.multiply(withdrawalFee.divide(new BigDecimal("100"))));
+		
 		//Kontrollerar ifall kontot fortfarande har ett fritt uttag kvar
 		if(freeWithdrawal == true) {
-			if(amount <= super.getBalance()) {
+			if(amountTemp.compareTo(super.getBalance()) <= 0) {
 				//Anropar superklassens setbalance metod för den privata balance variabeln i superklassen
-				super.setBalance(amount);
-				super.addTransaction(amount * (-1), super.getBalance());
+				super.setBalance(amountTemp.toString());
+				super.addTransaction(amountTemp.negate().toString(), super.getBalance().toString());
 				freeWithdrawal = false;
 				return true;
 			} else {
@@ -29,9 +36,9 @@ public class SavingsAccount extends Account {
 			}
 		} else {
 			//Kontrollerar ifall uttagssumman + uttagsavgiften är lika med eller mindre än balansen på kontot
-			if((amountWithFee <= super.getBalance())) {
-				super.setBalance(amountWithFee);
-				super.addTransaction(amountWithFee * (-1), super.getBalance());
+			if((amountWithFee.compareTo(super.getBalance()) <= 0)) {
+				super.setBalance(amountWithFee.toString());
+				super.addTransaction(amountWithFee.negate().toString(), super.getBalance().toString());
 				return true;
 			} else {
 				return false;
@@ -48,7 +55,8 @@ public class SavingsAccount extends Account {
 	 * @return konverterad sträng från double av den specifika årsräntan för sparkonton
 	 */
 	private String getSpecificAccountInfo() {
-		return "" + super.getBalance() * (interestRate/100);
+		BigDecimal calculatedInterest = super.getBalance().multiply(interestRate.divide(new BigDecimal("100")));
+		return "" + calculatedInterest.toString();
 	}
 	
 	/*

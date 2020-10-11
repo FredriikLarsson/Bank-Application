@@ -1,5 +1,6 @@
 package frelab8;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,10 +16,10 @@ public abstract class Account {
 	private static int lastAssignedNumber = 1000; // Första kontot som skapas får nummer 1001.
 
 	private final int ACCOUNT_NUMBER; // Kontonummer bör inte kunna ändras efter skapandet av kontot därav "final"
-	private double balance;
+	private BigDecimal balance = BigDecimal.ZERO;
+	//private double balance;
 	private final String ACCOUNT_TYPE; // Med antagandet att kontotyp på ett konto aldrig ska kunna ändras ifall fler kontotyper tillkommer, därav final.
 	private ArrayList<Transaction> transactionHistory = new ArrayList<Transaction>();
-
 	
 	/*
 	 * Konstruktor för att skapa ett konto med ett unikt kontonummer inom hela banksystemet.
@@ -40,9 +41,10 @@ public abstract class Account {
 	 * @param amount är beloppet som ska tas ut
 	 * @return är sant/falskt över hur det gick att ta ut pengar.
 	 */
-	public void setBalance(double amount) {
-		if (balance >= amount) {
-			balance = balance - amount;
+	public void setBalance(String amount) {
+		BigDecimal amountTemp = new BigDecimal(amount);
+		if (balance.compareTo(amountTemp) >= 0) {
+			balance = balance.subtract(amountTemp);
 		}
 	}
 	
@@ -50,7 +52,7 @@ public abstract class Account {
 	 * Presenterar saldot på kontot
 	 * @return är saldot som finns på kontot
 	 */
-	public double getBalance() {
+	public BigDecimal getBalance() {
 		return balance;
 	}
 
@@ -60,8 +62,9 @@ public abstract class Account {
 	 * @param amount är beloppet som ska sättas in
 	 */
 	public void setBalanceDeposit(double amount) {
-		balance += amount;
-		transactionHistory.add(new Transaction(amount, balance));
+		BigDecimal amountTemp = new BigDecimal(amount);
+		balance = balance.add(amountTemp);
+		transactionHistory.add(new Transaction(amountTemp.toString(), balance.toString()));
 	}
 	
 	/*
@@ -69,7 +72,7 @@ public abstract class Account {
 	 * @param amount är uttaget eller insättningen som görs 
 	 * @param balance är balansen efter att uttaget eller instättningen gjorts
 	 */
-	public void addTransaction(double amount, double balance) {
+	public void addTransaction(String amount, String balance) {
 		transactionHistory.add(new Transaction(amount, balance));
 	}
 

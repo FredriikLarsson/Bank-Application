@@ -6,10 +6,10 @@ import java.util.Date;
 
 public class Transaction {
 	private Date dateTime = new Date();
-	private double amount;
-	private double balanceAfter;
+	private String amount;
+	private String balanceAfter;
 	
-	public Transaction(double amount, double balanceAfter) {
+	public Transaction(String amount, String balanceAfter) {
 		this.amount = amount;
 		this.balanceAfter = balanceAfter;
 	}
