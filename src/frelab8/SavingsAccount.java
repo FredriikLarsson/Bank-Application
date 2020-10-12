@@ -1,6 +1,6 @@
 package frelab8;
 
-import java.math.BigDecimal;
+import java.math.BigDecimal;import java.math.RoundingMode;
 
 public class SavingsAccount extends Account {
 	//private static double interestRate = 1.0;
@@ -20,8 +20,8 @@ public class SavingsAccount extends Account {
 	 */
 	public boolean setBalanceWithdrawal(double amount) {
 		//double amountWithFee = amount + (amount * (withdrawalFee/100));
-		BigDecimal amountTemp = new BigDecimal(amount);
-		BigDecimal amountWithFee = amountTemp.add(amountTemp.multiply(withdrawalFee.divide(new BigDecimal("100"))));
+		BigDecimal amountTemp = new BigDecimal(amount).setScale(1, RoundingMode.HALF_EVEN);
+		BigDecimal amountWithFee = amountTemp.add(amountTemp.multiply(withdrawalFee.divide(new BigDecimal("100"))).setScale(1, RoundingMode.HALF_EVEN));
 		
 		//Kontrollerar ifall kontot fortfarande har ett fritt uttag kvar
 		if(freeWithdrawal == true) {
@@ -56,7 +56,7 @@ public class SavingsAccount extends Account {
 	 */
 	private String getSpecificAccountInfo() {
 		BigDecimal calculatedInterest = super.getBalance().multiply(interestRate.divide(new BigDecimal("100")));
-		return "" + calculatedInterest.toString();
+		return "" + calculatedInterest.setScale(1, RoundingMode.HALF_EVEN);
 	}
 	
 	/*

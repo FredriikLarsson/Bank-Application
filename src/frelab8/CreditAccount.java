@@ -1,6 +1,7 @@
 package frelab8;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class CreditAccount extends Account {
 	//private static String interestRate = "0.5";
@@ -10,7 +11,7 @@ public class CreditAccount extends Account {
 	private BigDecimal creditLimit = new BigDecimal("5000");
 	private static BigDecimal interestRate = new BigDecimal("0.5");
 	private static BigDecimal loanFee = new BigDecimal("7.0");
-	private BigDecimal creditUsed = BigDecimal.ZERO;
+	private BigDecimal creditUsed = BigDecimal.ZERO.setScale(1, RoundingMode.HALF_EVEN);
 	
 	
 	public CreditAccount() {
@@ -24,9 +25,9 @@ public class CreditAccount extends Account {
 	private String getSpecificAccountInfo() {
 		BigDecimal interestRateTemp = interestRate.divide(new BigDecimal("100"));
 		if(creditUsed.compareTo(BigDecimal.ZERO) > 0) {
-			return "" + (creditUsed.multiply(loanFee.divide(new BigDecimal("100"))).toString());
+			return "" + (creditUsed.multiply(loanFee.divide(new BigDecimal("100"))).setScale(1, RoundingMode.HALF_EVEN).negate().toString());
 		} else {
-			return "" + interestRateTemp.multiply(super.getBalance());
+			return "" + interestRateTemp.multiply(super.getBalance()).setScale(1, RoundingMode.HALF_EVEN);
 		}
 	}
 	
@@ -36,8 +37,8 @@ public class CreditAccount extends Account {
 	 * @return sant/falskt ifall uttaget lyckades eller inte
 	 */
 	public boolean setBalanceWithdrawal(double amount) {
-		BigDecimal amountTemp = new BigDecimal(amount);
-		BigDecimal creditLeft = creditLimit.subtract(creditUsed);
+		BigDecimal amountTemp = new BigDecimal(amount).setScale(1, RoundingMode.HALF_EVEN);
+		BigDecimal creditLeft = creditLimit.subtract(creditUsed).setScale(1, RoundingMode.HALF_EVEN);
 		//Kontrollerar ifall uttagssumman är större än nuvarande balansen och mindre än den kvarvarande krediten på kontot
 		if(((amountTemp.compareTo(super.getBalance())) > 0) && (amountTemp.compareTo(creditLeft.add(super.getBalance())) <= 0 )) {
 			creditUsed = creditUsed.add(amountTemp.subtract(super.getBalance()));

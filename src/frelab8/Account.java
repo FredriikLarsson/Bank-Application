@@ -1,8 +1,9 @@
 package frelab8;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Date;
+//import java.util.Date;
 
 /*
  * Klass för att skapa och hantera konton som ska finnas med i banksystemet.
@@ -16,7 +17,7 @@ public abstract class Account {
 	private static int lastAssignedNumber = 1000; // Första kontot som skapas får nummer 1001.
 
 	private final int ACCOUNT_NUMBER; // Kontonummer bör inte kunna ändras efter skapandet av kontot därav "final"
-	private BigDecimal balance = BigDecimal.ZERO;
+	private BigDecimal balance = BigDecimal.ZERO.setScale(1, RoundingMode.HALF_EVEN);
 	//private double balance;
 	private final String ACCOUNT_TYPE; // Med antagandet att kontotyp på ett konto aldrig ska kunna ändras ifall fler kontotyper tillkommer, därav final.
 	private ArrayList<Transaction> transactionHistory = new ArrayList<Transaction>();
@@ -42,7 +43,7 @@ public abstract class Account {
 	 * @return är sant/falskt över hur det gick att ta ut pengar.
 	 */
 	public void setBalance(String amount) {
-		BigDecimal amountTemp = new BigDecimal(amount);
+		BigDecimal amountTemp = new BigDecimal(amount).setScale(1, RoundingMode.HALF_EVEN);
 		if (balance.compareTo(amountTemp) >= 0) {
 			balance = balance.subtract(amountTemp);
 		}
@@ -62,7 +63,7 @@ public abstract class Account {
 	 * @param amount är beloppet som ska sättas in
 	 */
 	public void setBalanceDeposit(double amount) {
-		BigDecimal amountTemp = new BigDecimal(amount);
+		BigDecimal amountTemp = new BigDecimal(amount).setScale(1, RoundingMode.HALF_EVEN);
 		balance = balance.add(amountTemp);
 		transactionHistory.add(new Transaction(amountTemp.toString(), balance.toString()));
 	}
