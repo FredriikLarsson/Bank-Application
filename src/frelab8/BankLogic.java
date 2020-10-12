@@ -143,7 +143,7 @@ public class BankLogic {
 	 * Hämtar information om ett specifikt konto
 	 * @param idNumber är personnumret hos kontoägaren, @param accountId är
 	 * kontonumret på kontot
-	 * @return en sträck med information om det specifika kontot
+	 * @return en sträng med information om det specifika kontot
 	 */
 	public String getAccount(String idNumber, int accountId) {
 		Account account = getAccountObject(idNumber, accountId);
@@ -168,7 +168,6 @@ public class BankLogic {
 		if (account == null) {
 			return null;
 		} else {
-			// closingAccountInfo = account.getClosingAccountInfo();
 			// Tar bort kontot från kontolistan hos kontoägaren(kunden)
 			customer.deleteAccount(accountId);
 			return account.getClosingAccountInfo();

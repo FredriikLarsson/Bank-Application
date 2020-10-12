@@ -3,7 +3,6 @@ package frelab8;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-//import java.util.Date;
 
 /*
  * Klass för att skapa och hantera konton som ska finnas med i banksystemet.
@@ -12,15 +11,12 @@ import java.util.ArrayList;
  */
 
 public abstract class Account {
-
-	//private static double interestRate = 1; // Räntesats i procent.
+	
 	private static int lastAssignedNumber = 1000; // Första kontot som skapas får nummer 1001.
-
 	private final int ACCOUNT_NUMBER; // Kontonummer bör inte kunna ändras efter skapandet av kontot därav "final"
-	private BigDecimal balance = BigDecimal.ZERO.setScale(1, RoundingMode.HALF_EVEN);
-	//private double balance;
-	private final String ACCOUNT_TYPE; // Med antagandet att kontotyp på ett konto aldrig ska kunna ändras ifall fler kontotyper tillkommer, därav final.
-	private ArrayList<Transaction> transactionHistory = new ArrayList<Transaction>();
+	private final String ACCOUNT_TYPE; // Med antagandet att kontotyp på ett konto aldrig ska kunna ändras, därav final.
+	private BigDecimal balance = BigDecimal.ZERO.setScale(1, RoundingMode.HALF_EVEN); // Kontobalansen satt till 0 som standard och innehar 1 decimals precision och rundar av till närmsta 50öre.
+	private ArrayList<Transaction> transactionHistory = new ArrayList<Transaction>(); // Lista med alla transaktioner som gjorts på kontot
 	
 	/*
 	 * Konstruktor för att skapa ett konto med ett unikt kontonummer inom hela banksystemet.
@@ -32,10 +28,6 @@ public abstract class Account {
 		this.ACCOUNT_NUMBER = lastAssignedNumber + 1;
 		lastAssignedNumber += 1;
 	}
-
-	
-	public abstract boolean setBalanceWithdrawal(double amount);
-	
 	
 	/*
 	 * Kontrollerar saldot på kontot vid ett uttag och ta bort uttaget belopp.
@@ -43,9 +35,10 @@ public abstract class Account {
 	 * @return är sant/falskt över hur det gick att ta ut pengar.
 	 */
 	public void setBalance(String amount) {
-		BigDecimal amountTemp = new BigDecimal(amount).setScale(1, RoundingMode.HALF_EVEN);
-		if (balance.compareTo(amountTemp) >= 0) {
-			balance = balance.subtract(amountTemp);
+		BigDecimal amount_ = new BigDecimal(amount).setScale(1, RoundingMode.HALF_EVEN); // Konvertera argumentet (String)amount till en BigDecimal för att använda i metoden
+		//Kontrollera ifall uttagssumman finns tillgänglig i kontobalansen för att kunna ta ut pengar
+		if (balance.compareTo(amount_) >= 0) {
+			balance = balance.subtract(amount_);
 		}
 	}
 	
@@ -63,9 +56,10 @@ public abstract class Account {
 	 * @param amount är beloppet som ska sättas in
 	 */
 	public void setBalanceDeposit(double amount) {
-		BigDecimal amountTemp = new BigDecimal(amount).setScale(1, RoundingMode.HALF_EVEN);
-		balance = balance.add(amountTemp);
-		transactionHistory.add(new Transaction(amountTemp.toString(), balance.toString()));
+		BigDecimal amount_ = new BigDecimal(amount).setScale(1, RoundingMode.HALF_EVEN); // Konvertera (double)amount till en BigDecimal som används i metoden.
+		balance = balance.add(amount_);
+		//Addera transaktionen till transaktionslistan på kontot, genom att konvertera både amount_ och balance till strängar som "transaction(String, String)" metoden kräver
+		transactionHistory.add(new Transaction(amount_.toString(), balance.toString()));
 	}
 	
 	/*
@@ -85,17 +79,6 @@ public abstract class Account {
 	public int getAccountNumber() {
 		return ACCOUNT_NUMBER;
 	}
-
-	
-	public abstract String getAccountInfo();
-	
-	//public abstract double getInterestRate();
-	
-	//public abstract double getBalanceSpecific();
-
-	
-
-	public abstract String getClosingAccountInfo();
 	
 	/*
 	 * Hämtar och konverterar transaktionslistan till en ny arraylista med transaktionsinformation(strängar)
@@ -103,18 +86,25 @@ public abstract class Account {
 	 */
 	public ArrayList<String> getTransactionHistory() {
 		ArrayList<String> transactionList = new ArrayList<String>();
+		//Loopar igenom transaktionslistan med transaktionsobjekt och konverterar varje transaktionsobjekt till en annan arraylista med strängar
 		for (int i = 0; i < transactionHistory.size(); i++) {
 			transactionList.add(transactionHistory.get(i).getTransactionInfo());
 		}
 		return transactionList;
 	}
 	
-	//public abstract String getSpecificAccountInfo();
-	
+	/*
+	 * Hämtar vad för typ av konto som det nuvarande kontot är
+	 * @return typ av konto i form av en sträng
+	 */
 	public String getAccountType() {
 		return ACCOUNT_TYPE;
 	}
-
-	//public abstract double calculateRate();
+	
+	public abstract boolean setBalanceWithdrawal(double amount);
+	
+	public abstract String getAccountInfo();
+	
+	public abstract String getClosingAccountInfo();
 
 }
