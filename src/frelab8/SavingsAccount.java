@@ -73,7 +73,7 @@ public class SavingsAccount extends Account {
 	 */
 	private String getCalculatedInterest() {
 		BigDecimal calculatedInterest = super.getBalance().multiply(interestRate.divide(new BigDecimal("100"))); // Tar kontobalansen "super.getBalance" och multiplicerar med räntesatsen "interestRate" dividerat med 100.
-		return "" + calculatedInterest.setScale(1, RoundingMode.HALF_EVEN);
+		return "" + calculatedInterest.setScale(2, RoundingMode.HALF_EVEN);
 	}
 
 }
