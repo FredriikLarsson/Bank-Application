@@ -53,12 +53,18 @@ public class CreditAccount extends Account {
 	 * Hämtar information om kontot
 	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + årsräntan
 	 */
-	public String getAccountInfo() {
+	public String[] getAccountInfo() {
+		String[] list = new String[4];
+		list[0] = Integer.toString(super.getAccountNumber());
+		list[1] = getAccountBalance();
+		list[2] = super.getAccountType();
 		//Kontrollerar ifall kontot har använt krediter
 		if(creditUsed.compareTo(BigDecimal.ZERO) > 0) {
-			return super.getAccountNumber() + " " + getAccountBalance() + " kr " + super.getAccountType() + " " + loanFee.toString() + " %";
+			list[3] = loanFee.toString();
+			return list;
 		} else {
-			return super.getAccountNumber() + " " + getAccountBalance() + " kr " + super.getAccountType() + " " + interestRate.toString() + " %";
+			list[3] = interestRate.toString();
+			return list;
 		}
 	}
 	
@@ -66,8 +72,13 @@ public class CreditAccount extends Account {
 	 * Hämtar information om kontot vid borttagning av kontot
 	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + kalkylerad årsränta i kronor
 	 */
-	public String getClosingAccountInfo() {
-		return super.getAccountNumber() + " " + getAccountBalance() + " kr " + super.getAccountType() + " " + getCalculatedInterest() + " kr";
+	public String[] getClosingAccountInfo() {
+		String[] list = new String[4];
+		list[0] = Integer.toString(super.getAccountNumber());
+		list[1] = getAccountBalance();
+		list[2] = super.getAccountType();
+		list[3] = getCalculatedInterest();
+		return list;
 	}
 	
 	/*

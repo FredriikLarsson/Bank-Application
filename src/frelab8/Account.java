@@ -103,8 +103,8 @@ public abstract class Account {
 	
 	public abstract boolean setBalanceWithdrawal(double amount);
 	
-	public abstract String getAccountInfo();
+	public abstract String[] getAccountInfo();
 	
-	public abstract String getClosingAccountInfo();
+	public abstract String[] getClosingAccountInfo();
 
 }

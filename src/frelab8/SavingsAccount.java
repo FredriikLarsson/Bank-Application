@@ -55,16 +55,27 @@ public class SavingsAccount extends Account {
 	 * Hämtar information om kontot
 	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + årsräntan
 	 */
-	public String getAccountInfo() {
-		return super.getAccountNumber() + " " + super.getBalance() + " kr " + super.getAccountType() + " " + interestRate + " %";
+	public String[] getAccountInfo() {
+		String[] list = new String[4];
+		list[0] = Integer.toString(super.getAccountNumber());
+		list[1] = super.getBalance().toString();
+		list[2] = super.getAccountType();
+		list[3] = interestRate.toString();
+		
+		return list;
 	}
 	
 	/*
 	 * Hämtar information om kontot vid borttagning av kontot
 	 * @return en sträng som innehåller kontonumret + kontobalansen + kontotypen + kalkylerad årsränta i kronor
 	 */
-	public String getClosingAccountInfo() {
-		return super.getAccountNumber() + " " + super.getBalance() + " kr " + super.getAccountType() + " " + getCalculatedInterest() + " kr";
+	public String[] getClosingAccountInfo() {
+		String[] list = new String[4];
+		list[0] = Integer.toString(super.getAccountNumber());
+		list[1] = super.getBalance().toString();
+		list[2] = super.getAccountType();
+		list[3] = getCalculatedInterest();
+		return list;
 	}
 	
 	/*

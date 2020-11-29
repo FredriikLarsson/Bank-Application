@@ -1,6 +1,7 @@
 package frelab8;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /*
  * Klass för att skapa och hantera kunder inom banksystemet.
@@ -47,8 +48,12 @@ public class Customer {
 	 * Hämta information om specifik kund
 	 * @return en sträng med kundens personnummer + för- och efternamn
 	 */
-	public String getCustomerInfo() {
-		return ID_NUMBER + " " + firstName + " " + lastName;
+	public String[] getCustomerInfo() {
+		String[] customerInfo = new String[3];
+		customerInfo[0] = ID_NUMBER;
+		customerInfo[1] = firstName;
+		customerInfo[2] = lastName;
+		return customerInfo;
 	}
 
 	/*
@@ -111,8 +116,8 @@ public class Customer {
 	 * Hämta kundens lista med nuvarande konton
 	 * @return en ny arraylista<String> som representerar kundens nuvarande konton
 	 */
-	public ArrayList<String> getCustomerAccounts() {
-		ArrayList<String> accountInfo = new ArrayList<String>();
+	public ArrayList<String[]> getCustomerAccounts() {
+		ArrayList<String[]> accountInfo = new ArrayList<String[]>();
 		// Addera den valda kundens information på första platsen till den array som
 		// sedan ska returneras.
 		accountInfo.add(getCustomerInfo());
@@ -130,12 +135,13 @@ public class Customer {
 	 */
 	public ArrayList<String> getCustomerClosingAccounts() {
 		ArrayList<String> accountInfo = new ArrayList<String>();
+		String str = Arrays.toString(getCustomerInfo());
 		// Lägger till kund information på första platsen i arraylistan
-		accountInfo.add(getCustomerInfo());
+		accountInfo.add(str);
 		// Loopa igenom den valda kundens lista över konton och addera dessa till den
 		// nya arrayen som ska returneras.
 		for (int i = 0; i < accounts.size(); i++) {
-			accountInfo.add(i + 1, accounts.get(i).getClosingAccountInfo());
+			accountInfo.add(i + 1, Arrays.toString(accounts.get(i).getClosingAccountInfo()));
 		}
 		return accountInfo;
 	}

@@ -35,7 +35,7 @@ public class BankLogic {
 	 * @return en lista med information om kunden på första platsen i listan och
 	 * informaton om bankkonton på efterföljande platser i listan
 	 */
-	public ArrayList<String> getCustomer(String idNumber) {
+	public ArrayList<String[]> getCustomer(String idNumber) {
 		Customer customer = getCustomerObject(idNumber);
 		// Kontrollera ifall kunden finns i banksystemet
 		if (customer == null) {
@@ -97,8 +97,8 @@ public class BankLogic {
 	 * Hämtar information om alla kunder i kundlistan (customers)
 	 * @return en lista med information om alla kunder i banksystemet
 	 */
-	public ArrayList<String> getAllCustomers() {
-		ArrayList<String> allCustomerInfo = new ArrayList<String>();
+	public ArrayList<String[]> getAllCustomers() {
+		ArrayList<String[]> allCustomerInfo = new ArrayList<String[]>();
 		// Loopar igenom kundlistan för att hämta information om alla kunder till den
 		// lista som sedan ska returneras
 		for (int i = 0; i < customers.size(); i++) {
@@ -145,7 +145,7 @@ public class BankLogic {
 	 * kontonumret på kontot
 	 * @return en sträng med information om det specifika kontot
 	 */
-	public String getAccount(String idNumber, int accountId) {
+	public String[] getAccount(String idNumber, int accountId) {
 		Account account = getAccountObject(idNumber, accountId);
 		// Kontrollerar ifall kontot och kontoägare(kund) existerar i banksystemet
 		if (account == null) {
@@ -161,7 +161,7 @@ public class BankLogic {
 	 * på kontot som ska tas bort
 	 * @return en sträng med information om kontot som nyss tagits bort
 	 */
-	public String closeAccount(String idNumber, int accountId) {
+	public String[] closeAccount(String idNumber, int accountId) {
 		Customer customer = getCustomerObject(idNumber);
 		Account account = getAccountObject(idNumber, accountId);
 		// Kontrollerar ifall konto och kontoägare(kund) existerar i banksystemet
@@ -256,7 +256,7 @@ public class BankLogic {
 	private Customer getCustomerObject(String idNumber) {
 		// Loopar igenom kundlistan på banken för att kontrollera ifall kunden existerar
 		for (int i = 0; i < customers.size(); i++) {
-			if (customers.get(i).getIdNumber() == idNumber) {
+			if (customers.get(i).getIdNumber().equals(idNumber)) {
 				return customers.get(i);
 			}
 		}
@@ -273,7 +273,7 @@ public class BankLogic {
 		// Loopar igenom kundlistan för att kontrollera vilket index som kunden har i
 		// kundlistan
 		for (int i = 0; i < customers.size(); i++) {
-			if (customers.get(i).getIdNumber() == idNumber) {
+			if (customers.get(i).getIdNumber().equals(idNumber)) {
 				return i;
 			}
 		}
