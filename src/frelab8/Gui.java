@@ -1,5 +1,6 @@
 package frelab8;
 
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,7 +19,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -51,7 +51,7 @@ public class Gui implements ActionListener {
 	JPanel wrapperOuterPanel = new JPanel();
 	JPanel wrapperPanelMenu = new JPanel();
 	JLabel accountLabel = new JLabel();
-	JList<String> transactionInfo = new JList<String>(); //En lista med information om transaktioner på den nuvarande kontot man sökt på.
+	JList<Object> transactionInfo = new JList<Object>(); //En lista med information om transaktioner på den nuvarande kontot man sökt på.
 	JList<Object> customerClosingInfo = new JList<Object>(); //En lista med information om kunden vid borttagning av kunden från systemet.
 	JList<Object> accountClosingInfo = new JList<Object>(); //En lista med information om kontot vid borttagning av kontot från systemet.
 	ArrayList<String[]> li = new ArrayList<String[]>();
@@ -166,8 +166,16 @@ public class Gui implements ActionListener {
 		
 		//De komponenter som ska finnas när man kommer till ett specifikt konto.
 		accountPanel.add(transactionInfo);
+		accountButtonPanel.add(depositButton);
+		accountButtonPanel.add(withdrawButton);
+		accountButtonPanel.add(deleteAccountButton);
+		accountButtonPanel.setLayout(new FlowLayout());
 		deleteAccountButton.setActionCommand("deleteAccountButton");
 		deleteAccountButton.addActionListener(this);
+		depositButton.setActionCommand("depositButton");
+		depositButton.addActionListener(this);
+		withdrawButton.setActionCommand("withdrawButton");
+		withdrawButton.addActionListener(this);
 		accountPanel.setBorder(BorderFactory.createTitledBorder("Transaktioner"));
 		accountPanel.setLayout(new BoxLayout(accountPanel, BoxLayout.PAGE_AXIS));
 		
@@ -216,12 +224,12 @@ public class Gui implements ActionListener {
 		wrapperOuterPanel.add(accountPanel, c);
 		c.gridx = 0;
 		c.gridy = 2;
-		wrapperOuterPanel.add(deleteAccountButton, c);
+		wrapperOuterPanel.add(accountButtonPanel, c);
 		
 		//Panelerna här ska inte vara synliga på startsidan i systemet.
+		accountButtonPanel.setVisible(false);
 		accountPanel.setVisible(false);
 		accountLabel.setVisible(false);
-		deleteAccountButton.setVisible(false);
 		wrapperPanelMenu.setVisible(false);
 		createCustomerPanel.setVisible(false);
 		createAccountPanel.setVisible(false);
@@ -271,18 +279,6 @@ public class Gui implements ActionListener {
 			//Ändra det nuvarande personnumret till den text i textfältet "customerIdNumberInput".
 			currentIdNumber = customerIdNumberInput.getText();
 			addRowToTable();
-			
-			/*ArrayList<String[]> li = bank.getCustomer(currentIdNumber);
-			DefaultTableModel model = (DefaultTableModel) tableAccounts.getModel();
-			model.setColumnCount(4);
-			Object rowData[] = new Object[5];
-			for(int i = 0; i < li.size(); i++) {
-				for(int y = 0; y < li.get(i).length; y++) {
-					rowData[y] = li.get(i)[y];
-				}
-				model.addRow(rowData);
-			}*/
-			
 			accountsPanel.remove(tableAccounts);
 			accountsPanel.add(tableAccounts);
 			accountsPanel.revalidate();
@@ -343,7 +339,6 @@ public class Gui implements ActionListener {
 			customersPanel.setVisible(false);
 			searchPanel.setVisible(false);
 			welcomePanel.setVisible(false);
-			deleteAccountButton.setVisible(false);
 			accountPanel.setVisible(false);
 			accountLabel.setVisible(false);
 			wrapperOuterPanel.setVisible(true);
@@ -353,6 +348,8 @@ public class Gui implements ActionListener {
 			break;
 		case "chooseAccountButton":
 			currentAccountNumber = tableAccounts.getValueAt(tableAccounts.getSelectedRow(), 0).toString();
+			Object[] transactionList = bank.getTransactions(currentIdNumber, Integer.parseInt(currentAccountNumber)).toArray();
+			transactionInfo = new JList<Object>(transactionList);
 			String[] accountInfo = bank.getAccount(currentIdNumber, Integer.parseInt(currentAccountNumber));
 			String accountBalance = accountInfo[1];
 			String accountType = accountInfo[2];
@@ -362,24 +359,29 @@ public class Gui implements ActionListener {
 			} catch (NumberFormatException e1) {
 				System.out.println("Kontonumrets format ogiltigt");
 			}
+			accountPanel.remove(transactionInfo);
+			accountPanel.add(transactionInfo);
+			accountPanel.revalidate();
+			frame.repaint();
 			accountsPanel.setVisible(false);
 			chooseAccountButton.setVisible(false);
 			customerButtonPanel.setVisible(false);
+			accountButtonPanel.setVisible(true);
 			accountPanel.setVisible(true);
-			deleteAccountButton.setVisible(true);
 			accountLabel.setVisible(true);
 			break;
 		case "deleteAccountButton":
-			//Temporär påhittad data, kommentaren under är till för den verkliga implementationen senare.
-			
-			//accountClosingInfo = new JList<Object>(bank.closeAccount(currentIdNumber, Integer.parseInt(currentAccountNumber)));
-			
-			accountClosingInfo = new JList<Object>(cloAccInfo);
+			Object[] closingList = bank.closeAccount(currentIdNumber, Integer.parseInt(currentAccountNumber));
+			accountClosingInfo = new JList<Object>(closingList);
 			JOptionPane.showMessageDialog(frame, accountClosingInfo);
+			addRowToTable();
+			accountsPanel.remove(tableAccounts);
+			accountsPanel.add(tableAccounts);
+			accountsPanel.revalidate();
+			frame.repaint();
 			accountPanel.setVisible(false);
-			deleteAccountButton.setVisible(false);
+			accountButtonPanel.setVisible(false);
 			accountLabel.setVisible(false);
-			wrapperOuterPanel.setVisible(true);
 			accountsPanel.setVisible(true);
 			chooseAccountButton.setVisible(true);
 			customerButtonPanel.setVisible(true);
@@ -408,7 +410,7 @@ public class Gui implements ActionListener {
 			customersPanel.setVisible(false);
 			chooseCustomerButton.setVisible(false);
 			accountPanel.setVisible(false);
-			deleteAccountButton.setVisible(false);
+			accountButtonPanel.setVisible(false);
 			accountLabel.setVisible(false);
 			chooseAccountButton.setVisible(false);
 			accountsPanel.setVisible(false);
