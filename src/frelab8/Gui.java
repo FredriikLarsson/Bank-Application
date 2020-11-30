@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,6 +33,8 @@ public class Gui implements ActionListener {
 	JButton changeCustomerNameButton = new JButton("Ändra kundnamn");
 	JButton deleteAccountButton = new JButton("Ta bort konto");
 	JButton depositButton = new JButton("Sätt in pengar");
+	JButton confirmDepositButton = new JButton("Sätt in");
+	JButton confirmWithdrawButton = new JButton("Ta ut");
 	JButton withdrawButton = new JButton("Ta ut pengar");
 	JButton createCustomerButton = new JButton("Skapa kund");
 	JButton chooseAccountButton = new JButton("Välj konto");
@@ -50,6 +53,7 @@ public class Gui implements ActionListener {
 	JPanel changeCustomerNamePanel = new JPanel();
 	JPanel wrapperOuterPanel = new JPanel();
 	JPanel wrapperPanelMenu = new JPanel();
+	JPanel amountPanel = new JPanel();
 	JLabel accountLabel = new JLabel();
 	JList<Object> transactionInfo = new JList<Object>(); //En lista med information om transaktioner på den nuvarande kontot man sökt på.
 	JList<Object> customerClosingInfo = new JList<Object>(); //En lista med information om kunden vid borttagning av kunden från systemet.
@@ -72,6 +76,7 @@ public class Gui implements ActionListener {
 	JTextField createCustomerLastname = new JTextField("Efternamn");
 	JTextField changeFirstNameInput = new JTextField("Förnamn", 15);
 	JTextField changeLastNameInput = new JTextField("Efternamn", 15);
+	JTextField amountInput = new JTextField(10);
 	
 	//Temp text
 	String[] cNames = {"Kontonummer", "Saldo", "Kontotyp", "Ränta"};
@@ -163,6 +168,11 @@ public class Gui implements ActionListener {
 		//De textfält som ska finnas i den popupruta som kommer upp när man ska byta namn på kunden.
 		changeCustomerNamePanel.add(changeFirstNameInput);
 		changeCustomerNamePanel.add(changeLastNameInput);
+		
+		amountPanel.add(amountInput);
+		amountPanel.setLayout(new BoxLayout(amountPanel, BoxLayout.PAGE_AXIS));
+		amountPanel.add(confirmDepositButton);
+		amountPanel.add(confirmWithdrawButton);
 		
 		//De komponenter som ska finnas när man kommer till ett specifikt konto.
 		accountPanel.add(transactionInfo);
@@ -348,6 +358,7 @@ public class Gui implements ActionListener {
 			break;
 		case "chooseAccountButton":
 			currentAccountNumber = tableAccounts.getValueAt(tableAccounts.getSelectedRow(), 0).toString();
+			transactionInfo.setModel(new DefaultListModel());
 			Object[] transactionList = bank.getTransactions(currentIdNumber, Integer.parseInt(currentAccountNumber)).toArray();
 			transactionInfo = new JList<Object>(transactionList);
 			String[] accountInfo = bank.getAccount(currentIdNumber, Integer.parseInt(currentAccountNumber));
@@ -436,6 +447,42 @@ public class Gui implements ActionListener {
 			accountsPanel.revalidate();
 			frame.repaint();
 			JOptionPane.showMessageDialog(frame, "Det nya kontot har kontonummer: " + newAccountNumber);
+			break;
+		case "depositButton":
+			Object[] newTransactionList;
+			JOptionPane.showMessageDialog(frame, amountPanel);
+			String amount = amountInput.getText();
+			Boolean checkAmount = bank.deposit(currentIdNumber, Integer.parseInt(currentAccountNumber), Double.parseDouble(amount));
+			if(checkAmount) {
+				transactionInfo.setModel(new DefaultListModel());
+				newTransactionList = bank.getTransactions(currentIdNumber, Integer.parseInt(currentAccountNumber)).toArray();
+				transactionInfo = new JList<Object>(newTransactionList);
+				JOptionPane.showMessageDialog(frame, "Pengarna är insatta på kontot");
+			} else {
+				JOptionPane.showMessageDialog(frame, "Pengarna kunde inte sättas in");
+			}
+			accountPanel.remove(transactionInfo);
+			accountPanel.add(transactionInfo);
+			accountPanel.revalidate();
+			frame.repaint();
+			break;
+		case "withdrawButton":
+			Object[] newTransactionListWithdraw;
+			JOptionPane.showMessageDialog(frame, amountPanel);
+			String amountWithdraw = amountInput.getText();
+			Boolean checkAmountWithdraw = bank.withdraw(currentIdNumber, Integer.parseInt(currentAccountNumber), Double.parseDouble(amountWithdraw));
+			if(checkAmountWithdraw) {
+				transactionInfo.setModel(new DefaultListModel());
+				newTransactionListWithdraw = bank.getTransactions(currentIdNumber, Integer.parseInt(currentAccountNumber)).toArray();
+				transactionInfo = new JList<Object>(newTransactionListWithdraw);
+				JOptionPane.showMessageDialog(frame, "Pengarna har dragits från kontot");
+			} else {
+				JOptionPane.showMessageDialog(frame, "Pengarna kunde inte dras");
+			}
+			accountPanel.remove(transactionInfo);
+			accountPanel.add(transactionInfo);
+			accountPanel.revalidate();
+			frame.repaint();
 			break;
 		}
 	}
