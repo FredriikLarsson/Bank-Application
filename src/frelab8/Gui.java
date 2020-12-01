@@ -1,5 +1,7 @@
 package frelab8;
 
+import java.awt.CardLayout;
+import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -25,82 +27,91 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel; 
 
-public class Gui implements ActionListener {
+public class Gui implements ActionListener{
 	BankLogic bank = new BankLogic();
-	JFrame frame = new JFrame("Banksystem");//Skapar ett nytt fönster "frame" med titeln "Banksystem".
-	JButton searchCustomerButton = new JButton("Sök kund");//Knapp för att söka specifik kund.
-	JButton deleteCustomerButton = new JButton("Ta bort kund");
-	JButton changeCustomerNameButton = new JButton("Ändra kundnamn");
-	JButton deleteAccountButton = new JButton("Ta bort konto");
-	JButton depositButton = new JButton("Sätt in pengar");
-	JButton confirmDepositButton = new JButton("Sätt in");
-	JButton confirmWithdrawButton = new JButton("Ta ut");
-	JButton withdrawButton = new JButton("Ta ut pengar");
+	GuiCustomerView customerView;
+	GuiStartView startView;
+	GuiAccountView accountView;
+	JFrame frame = new JFrame("Banksystem");
+	CardLayout cardLayout = new CardLayout();
+	Container c = frame.getContentPane();
+	
+	//JButton searchCustomerButton = new JButton("Sök kund");//Knapp för att söka specifik kund.
+	//JButton deleteCustomerButton = new JButton("Ta bort kund");
+	//JButton changeCustomerNameButton = new JButton("Ändra kundnamn");
+	
+	//JButton deleteAccountButton = new JButton("Ta bort konto");
+	//JButton depositButton = new JButton("Sätt in pengar");
+	
+	//JButton confirmDepositButton = new JButton("Sätt in");
+	//JButton confirmWithdrawButton = new JButton("Ta ut");
+	
+	//JButton withdrawButton = new JButton("Ta ut pengar");
+	
 	JButton createCustomerButton = new JButton("Skapa kund");
-	JButton chooseAccountButton = new JButton("Välj konto");
+	
+	//JButton chooseAccountButton = new JButton("Välj konto");
+	
 	JButton chooseCustomerButton = new JButton("Välj kund");
-	JButton createCreditAccountButton = new JButton("Skapa kreditkonto");
-	JButton createSavingsAccountButton = new JButton("Skapa sparkonto");
-	JPanel searchPanel = new JPanel(); //Panel som innehåller interaktionskomponenter för att söka kund.
-	JPanel accountsPanel = new JPanel(); //Panel som innehåller en kunds alla konton.
+	
+	//JButton createCreditAccountButton = new JButton("Skapa kreditkonto");
+	//JButton createSavingsAccountButton = new JButton("Skapa sparkonto");
+	//JPanel searchPanel = new JPanel(); //Panel som innehåller interaktionskomponenter för att söka kund.
+	//JPanel accountsPanel = new JPanel(); //Panel som innehåller en kunds alla konton.
+	
 	JPanel customersPanel = new JPanel(); //Panel som innehåller systemets alla kunder.
 	JPanel createCustomerPanel = new JPanel();
-	JPanel createAccountPanel = new JPanel();
-	JPanel accountPanel = new JPanel();
-	JPanel accountButtonPanel = new JPanel();
-	JPanel customerButtonPanel = new JPanel();
-	JPanel accountLabelPanel = new JPanel();
-	JPanel changeCustomerNamePanel = new JPanel();
+	//JPanel createAccountPanel = new JPanel();
+	//JPanel accountPanel = new JPanel();
+	//JPanel accountButtonPanel = new JPanel();
+	
+	//JPanel customerButtonPanel = new JPanel();
+	
+	//JPanel accountLabelPanel = new JPanel();
+	
+	//JPanel changeCustomerNamePanel = new JPanel();
+	
 	JPanel wrapperOuterPanel = new JPanel();
 	JPanel wrapperPanelMenu = new JPanel();
-	JPanel amountPanel = new JPanel();
-	JLabel accountLabel = new JLabel();
-	JList<Object> transactionInfo = new JList<Object>(); //En lista med information om transaktioner på den nuvarande kontot man sökt på.
-	JList<Object> customerClosingInfo = new JList<Object>(); //En lista med information om kunden vid borttagning av kunden från systemet.
-	JList<Object> accountClosingInfo = new JList<Object>(); //En lista med information om kontot vid borttagning av kontot från systemet.
+	//JPanel amountPanel = new JPanel();
+	//JLabel accountLabel = new JLabel();
+	
+	//JList<Object> transactionInfo = new JList<Object>(); //En lista med information om transaktioner på den nuvarande kontot man sökt på.
+	
+	//JList<Object> customerClosingInfo = new JList<Object>(); //En lista med information om kunden vid borttagning av kunden från systemet.
+	//JList<Object> accountClosingInfo = new JList<Object>(); //En lista med information om kontot vid borttagning av kontot från systemet.
 	ArrayList<String[]> li = new ArrayList<String[]>();
-	JTable tableAccounts = new JTable(); //En lista med alla konton som en specifik kund har i systemet.
+	
+	//JTable tableAccounts = new JTable(); //En lista med alla konton som en specifik kund har i systemet.
+	
 	JTable tableCustomers = new JTable(); //En lista med alla kunder som systemet har förtillfället.
-	//En panel "welcomePanel" som innehåller labeln "welcomeLabel" som är rubriken på sidan.
+	
+	/*//En panel "welcomePanel" som innehåller labeln "welcomeLabel" som är rubriken på sidan.
 	JPanel welcomePanel = new JPanel();
-	JLabel welcomeLabel = new JLabel("Vad vill du göra?");
+	JLabel welcomeLabel = new JLabel("Vad vill du göra?");*/
+	
 	//Lagrade kontonummer och personnummer för att veta det konto eller den kund som användaren sökt på.
 	String currentAccountNumber;
 	String currentIdNumber = "";
-	//De textfält som används för input till funktionaliteten på sidan.
+	
 	//JTextField accountNumberInput = new JTextField("Fyll i kontonummer", 15);
-	JTextField customerIdNumberInput = new JTextField("Fyll i personnummer", 15);
+	//JTextField customerIdNumberInput = new JTextField("Fyll i personnummer", 15);
 	//JTextField idNumberInput = new JTextField("Fyll i personnummer", 15);
+	
 	JTextField createCustomerIdNumber = new JTextField("Fyll i personnummer", 15);
 	JTextField createCustomerFirstname = new JTextField("Förnamn");
 	JTextField createCustomerLastname = new JTextField("Efternamn");
-	JTextField changeFirstNameInput = new JTextField("Förnamn", 15);
-	JTextField changeLastNameInput = new JTextField("Efternamn", 15);
-	JTextField amountInput = new JTextField(10);
-	
-	//Temp text
-	String[] cNames = {"Kontonummer", "Saldo", "Kontotyp", "Ränta"};
-	Object[][] o = {
-			{"1004", "15000", "Sparkonto", "1,0"},	
-			{"1005", "1355", "Sparkonto", "1,0"},	
-			{"1006", "155", "Sparkonto", "1,0"},	
-			{"1007", "1", "Sparkonto", "1,0"},	
-			{"1008", "1999", "kreditkonto", "0,5"}	
-	};
-	Object[] oo = {"1004 15000 kr Sparkonto 1,0 %", "1005 1202 kr Kreditkonto 0,5 %", "1007 800 kr Sparkonto 1,0 %"};
-	Object[] cloAccInfo = {"1004", "1202 kr", "Sparkonto", "70 kr"};
-	String[] ccNames = {"Personnummer", "Förnamn", "Efternamn"};
-	Object[][] cc = {
-			{"910129", "Fredrik", "Larsson"},
-			{"881212", "Hampus", "Larsson"},
-			{"000303", "Dennis", "Karlsson"},
-			{"981229", "Anders", "Johansson"},
-			{"940610", "Fredrik", "Hansson"},
-	};
+	//JTextField changeFirstNameInput = new JTextField("Förnamn", 15);
+	//JTextField changeLastNameInput = new JTextField("Efternamn", 15);
+	//JTextField amountInput = new JTextField(10);
 	
 	public Gui() {
-		JMenuBar menuBar = new JMenuBar(); //Skapar ett menyfält som ska ligga högst upp i fönstret.
-		JMenu menu = new JMenu("Meny"); //Skapar två menyer där ena är huvudmenyn "menu" och den andra är en submeny "openAccount" som innehåller egna menyobjekt.
+		c.setLayout(cardLayout);
+		startView = new GuiStartView(this);
+		customerView = new GuiCustomerView(this, bank);
+		accountView = new GuiAccountView(this, bank);
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Meny");
 		JMenu openAccount = new JMenu("Öppna nytt konto");
 		JMenuItem getAllCustomer = new JMenuItem("Hämta alla kunder");
 		getAllCustomer.addActionListener(this);
@@ -109,14 +120,15 @@ public class Gui implements ActionListener {
 		createCustomer.addActionListener(this);
 		createCustomer.setActionCommand("createCustomer");
 		JMenuItem savingsAccount = new JMenuItem("Sparkonto");
-		savingsAccount.addActionListener(this);
+		//savingsAccount.addActionListener(this);
 		savingsAccount.setActionCommand("savingsAccount");
 		JMenuItem creditAccount = new JMenuItem("Kreditkonto");
-		creditAccount.addActionListener(this);
+		//creditAccount.addActionListener(this);
 		creditAccount.setActionCommand("creditAccount");
-		GridBagConstraints c = new GridBagConstraints();
 		
-		//Lägger till rubriken(welcomeLabel) och sökrutan som ska finnas på startsidan.
+		GridBagConstraints cGrid = new GridBagConstraints();
+		
+		/*//Lägger till rubriken(welcomeLabel) och sökrutan som ska finnas på startsidan.
 		welcomePanel.add(welcomeLabel);
 		welcomeLabel.setFont(new Font("Arial", Font.PLAIN, 20));
 		searchPanel.add(customerIdNumberInput);
@@ -125,7 +137,7 @@ public class Gui implements ActionListener {
 		searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.PAGE_AXIS));
 		searchPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Sök kund"), new EmptyBorder(50, 50, 50, 50)));
 		searchCustomerButton.addActionListener(this);
-		searchCustomerButton.setActionCommand("searchCustomerButton");
+		searchCustomerButton.setActionCommand("searchCustomerButton");*/
 		
 		//Lägger till de komponenter som ska finnas med när man vill hämta alla kunder.
 		customersPanel.add(tableCustomers);
@@ -134,7 +146,7 @@ public class Gui implements ActionListener {
 		chooseCustomerButton.addActionListener(this);
 		chooseCustomerButton.setActionCommand("chooseCustomerButton");
 		
-		//Lägger till de komponenter som ska finnas på sidan hos en specifik kund med dennes nuvarande konton.
+		/*//Lägger till de komponenter som ska finnas på sidan hos en specifik kund med dennes nuvarande konton.
 		accountsPanel.add(tableAccounts);
 		accountsPanel.setLayout(new BoxLayout(accountsPanel, BoxLayout.PAGE_AXIS));
 		accountsPanel.setBorder(BorderFactory.createTitledBorder("Konton"));
@@ -152,7 +164,7 @@ public class Gui implements ActionListener {
 		createCreditAccountButton.addActionListener(this);
 		createCreditAccountButton.setActionCommand("createCreditAccountButton");
 		createSavingsAccountButton.addActionListener(this);
-		createSavingsAccountButton.setActionCommand("createSavingsAccountButton");
+		createSavingsAccountButton.setActionCommand("createSavingsAccountButton");*/
 		
 		//Lägger till de komponenter som ska finnas på sidan då man ska skapa en ny kund.
 		createCustomerPanel.add(createCustomerIdNumber);
@@ -165,16 +177,16 @@ public class Gui implements ActionListener {
 		createCustomerButton.addActionListener(this);
 		createCustomerButton.setActionCommand("createCustomerButton");
 		
-		//De textfält som ska finnas i den popupruta som kommer upp när man ska byta namn på kunden.
+		/*//De textfält som ska finnas i den popupruta som kommer upp när man ska byta namn på kunden.
 		changeCustomerNamePanel.add(changeFirstNameInput);
-		changeCustomerNamePanel.add(changeLastNameInput);
+		changeCustomerNamePanel.add(changeLastNameInput);*/
 		
-		amountPanel.add(amountInput);
+		/*amountPanel.add(amountInput);
 		amountPanel.setLayout(new BoxLayout(amountPanel, BoxLayout.PAGE_AXIS));
 		amountPanel.add(confirmDepositButton);
-		amountPanel.add(confirmWithdrawButton);
+		amountPanel.add(confirmWithdrawButton);*/
 		
-		//De komponenter som ska finnas när man kommer till ett specifikt konto.
+		/*//De komponenter som ska finnas när man kommer till ett specifikt konto.
 		accountPanel.add(transactionInfo);
 		accountButtonPanel.add(depositButton);
 		accountButtonPanel.add(withdrawButton);
@@ -187,7 +199,7 @@ public class Gui implements ActionListener {
 		withdrawButton.setActionCommand("withdrawButton");
 		withdrawButton.addActionListener(this);
 		accountPanel.setBorder(BorderFactory.createTitledBorder("Transaktioner"));
-		accountPanel.setLayout(new BoxLayout(accountPanel, BoxLayout.PAGE_AXIS));
+		accountPanel.setLayout(new BoxLayout(accountPanel, BoxLayout.PAGE_AXIS));*/
 		
 		//Sätter layouten på den yttersta panelen "wrapperOuterPanel till en "GridBagLayout".
 		wrapperOuterPanel.setLayout(new GridBagLayout());
@@ -195,15 +207,16 @@ public class Gui implements ActionListener {
 		wrapperPanelMenu.setLayout(new GridBagLayout());
 		
 		//Här ändras "GridBagConstraints" innan varje enskild panel adderas till den yttre wrapperOuterPanel eller wrapperPanelMenu.
-		//welcomePanel och searchPanel ska befinna sig på samma sida.
+		
+		/*//welcomePanel och searchPanel ska befinna sig på samma sida.
 		c.gridx = 0;
 		c.gridy = 0;
 		wrapperOuterPanel.add(welcomePanel, c);
 		c.gridx = 0;
 		c.gridy = 1;
-		wrapperOuterPanel.add(searchPanel, c);
+		wrapperOuterPanel.add(searchPanel, c);*/
 		
-		//customerButtonPanel, accountsPanel, chooseAccountButton ska alla  befinna sig på sidan för en specifik kund.
+		/*//customerButtonPanel, accountsPanel, chooseAccountButton ska alla  befinna sig på sidan för en specifik kund.
 		c.gridx = 1;
 		c.gridy = 0;
 		wrapperOuterPanel.add(customerButtonPanel, c);
@@ -212,20 +225,20 @@ public class Gui implements ActionListener {
 		wrapperOuterPanel.add(accountsPanel, c);
 		c.gridx = 0;
 		c.gridy = 1;
-		wrapperOuterPanel.add(chooseAccountButton, c);
+		wrapperOuterPanel.add(chooseAccountButton, c);*/
 		
 		//createCustomerPanel ska befinna sig på en ensam sida där användaren ska skapa en ny kund.
-		c.gridx = 0;
-		c.gridy = 0;
-		wrapperPanelMenu.add(createCustomerPanel, c);
-		c.gridx = 0;
-		c.gridy = 0;
-		wrapperPanelMenu.add(customersPanel, c);
-		c.gridx = 0;
-		c.gridy = 1;
-		wrapperPanelMenu.add(chooseCustomerButton, c);
+		cGrid.gridx = 0;
+		cGrid.gridy = 0;
+		wrapperOuterPanel.add(createCustomerPanel, cGrid);
+		cGrid.gridx = 0;
+		cGrid.gridy = 0;
+		wrapperPanelMenu.add(customersPanel, cGrid);
+		cGrid.gridx = 0;
+		cGrid.gridy = 1;
+		wrapperPanelMenu.add(chooseCustomerButton, cGrid);
 		
-		//accountLabel, accountPanel, deleteAccountButton ska befinna sig på samma sida när användaren kommer till ett specifikt konto.
+		/*//accountLabel, accountPanel, deleteAccountButton ska befinna sig på samma sida när användaren kommer till ett specifikt konto.
 		c.gridx = 0;
 		c.gridy = 0;
 		wrapperOuterPanel.add(accountLabel, c);
@@ -234,9 +247,9 @@ public class Gui implements ActionListener {
 		wrapperOuterPanel.add(accountPanel, c);
 		c.gridx = 0;
 		c.gridy = 2;
-		wrapperOuterPanel.add(accountButtonPanel, c);
+		wrapperOuterPanel.add(accountButtonPanel, c);*/
 		
-		//Panelerna här ska inte vara synliga på startsidan i systemet.
+		/*//Panelerna här ska inte vara synliga på startsidan i systemet.
 		accountButtonPanel.setVisible(false);
 		accountPanel.setVisible(false);
 		accountLabel.setVisible(false);
@@ -244,10 +257,10 @@ public class Gui implements ActionListener {
 		createCustomerPanel.setVisible(false);
 		createAccountPanel.setVisible(false);
 		customersPanel.setVisible(false);
-		accountsPanel.setVisible(false);
-		chooseAccountButton.setVisible(false);
+		//accountsPanel.setVisible(false);
+		//chooseAccountButton.setVisible(false);
 		chooseCustomerButton.setVisible(false);
-		customerButtonPanel.setVisible(false);
+		//customerButtonPanel.setVisible(false);*/
 		
 		//Adderar den menu jag ska ha i mitt menyfält.
 		menuBar.add(menu);
@@ -260,12 +273,17 @@ public class Gui implements ActionListener {
 		openAccount.add(creditAccount);
 		//Fönstret "frame" ska ha storleken 800*600.
 		frame.setSize(800, 600);
-		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
+		//frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
 		//Fönstret ska ha menufältet "menuBar".
 		frame.setJMenuBar(menuBar);
 		//Fönstret ska ha en panel som allt innehåll ska ligga inom, panelen ska ha layouten GridBagLayout.
-		frame.add(wrapperPanelMenu);
-		frame.add(wrapperOuterPanel);
+		//frame.add(wrapperPanelMenu);
+		//frame.add(wrapperOuterPanel);
+		c.add(startView.getMainPanel(), "startView");
+		c.add(customerView.getMainPanel(), "customerView");
+		c.add(accountView.getMainPanel(), "accountView");
+		c.add(wrapperPanelMenu, "allCustomerView");
+		c.add(wrapperOuterPanel, "createCustomerView");
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -276,7 +294,7 @@ public class Gui implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		int newAccountNumber;
+		//int newAccountNumber;
 		String command;
 		if(e.getSource() instanceof JMenuItem) {
 			command = ((JMenuItem) e.getSource()).getActionCommand();
@@ -285,7 +303,7 @@ public class Gui implements ActionListener {
 		}
 		//Tar reda på vilken av knapparna eller menyalternativen som användaren har tryckt in.
 		switch(command) {
-		case "searchCustomerButton":
+		/*case "searchCustomerButton":
 			//Ändra det nuvarande personnumret till den text i textfältet "customerIdNumberInput".
 			currentIdNumber = customerIdNumberInput.getText();
 			addRowToTable();
@@ -324,28 +342,24 @@ public class Gui implements ActionListener {
 			} else {
 				JOptionPane.showMessageDialog(frame, "Kundnamnet har inte ändrats");
 			}
-			break;
+			break;*/
 		case "getAllCustomer":
 			addRowToCustomerTable();
 			customersPanel.remove(tableCustomers);
 			customersPanel.add(tableCustomers);
 			customersPanel.revalidate();
 			frame.repaint();
-			wrapperOuterPanel.setVisible(false);
-			wrapperPanelMenu.setVisible(true);
-			customersPanel.setVisible(true);
-			chooseCustomerButton.setVisible(true);
+			cardLayout.show(c, "allCustomerView");
 			break;
 		case "chooseCustomerButton":
 			currentIdNumber = tableCustomers.getValueAt(tableCustomers.getSelectedRow(), 0).toString();
-			System.out.println(currentIdNumber);
-			addRowToTable();
-			accountsPanel.remove(tableAccounts);
-			accountsPanel.add(tableAccounts);
-			accountsPanel.revalidate();
+			customerView.getCustomerViewController().addRowToTable();
+			customerView.getAccountsPanel().remove(customerView.getTableAccounts());
+			customerView.getAccountsPanel().add(customerView.getTableAccounts());
+			customerView.getAccountsPanel().revalidate();
 			frame.repaint();
-			wrapperPanelMenu.setVisible(false);
-			chooseCustomerButton.setVisible(false);
+			cardLayout.show(c, "customerView");
+			/*chooseCustomerButton.setVisible(false);
 			customersPanel.setVisible(false);
 			searchPanel.setVisible(false);
 			welcomePanel.setVisible(false);
@@ -354,9 +368,9 @@ public class Gui implements ActionListener {
 			wrapperOuterPanel.setVisible(true);
 			accountsPanel.setVisible(true);
 			chooseAccountButton.setVisible(true);
-			customerButtonPanel.setVisible(true);
+			customerButtonPanel.setVisible(true);*/
 			break;
-		case "chooseAccountButton":
+		/*case "chooseAccountButton":
 			currentAccountNumber = tableAccounts.getValueAt(tableAccounts.getSelectedRow(), 0).toString();
 			transactionInfo.setModel(new DefaultListModel());
 			Object[] transactionList = bank.getTransactions(currentIdNumber, Integer.parseInt(currentAccountNumber)).toArray();
@@ -396,27 +410,22 @@ public class Gui implements ActionListener {
 			accountsPanel.setVisible(true);
 			chooseAccountButton.setVisible(true);
 			customerButtonPanel.setVisible(true);
-			break;
+			break;*/
 		case "createCustomer":
-			wrapperOuterPanel.setVisible(false);
-			chooseCustomerButton.setVisible(false);
-			wrapperPanelMenu.setVisible(true);
-			createCustomerPanel.setVisible(true);
+			cardLayout.show(c, "createCustomerView");
 			break;
 		case "createCustomerButton":
 			String idNumber = createCustomerIdNumber.getText();
 			String firstName = createCustomerFirstname.getText();
 			String lastName = createCustomerLastname.getText();
 			Boolean check = bank.createCustomer(firstName, lastName, idNumber);
-			wrapperPanelMenu.setVisible(false);
-			createCustomerPanel.setVisible(false);
-			wrapperOuterPanel.setVisible(true);
 			if(check) {
 				JOptionPane.showMessageDialog(frame, "Kunden finns nu tillagd i systemet");
 			} else {
 				JOptionPane.showMessageDialog(frame, "Kunden kunde inte läggas till i systemet");
 			}
-			wrapperPanelMenu.setVisible(false);
+			
+			/*wrapperPanelMenu.setVisible(false);
 			createCustomerPanel.setVisible(false);
 			customersPanel.setVisible(false);
 			chooseCustomerButton.setVisible(false);
@@ -428,9 +437,11 @@ public class Gui implements ActionListener {
 			customerButtonPanel.setVisible(false);
 			searchPanel.setVisible(true);
 			welcomePanel.setVisible(true);
-			wrapperOuterPanel.setVisible(true);
+			wrapperOuterPanel.setVisible(true);*/
+			
+			cardLayout.show(c, "startView");
 			break;
-		case "createCreditAccountButton":
+		/*case "createCreditAccountButton":
 			newAccountNumber = bank.createCreditAccount(currentIdNumber);
 			addRowToTable();
 			accountsPanel.remove(tableAccounts);
@@ -483,11 +494,11 @@ public class Gui implements ActionListener {
 			accountPanel.add(transactionInfo);
 			accountPanel.revalidate();
 			frame.repaint();
-			break;
+			break;*/
 		}
 	}
 	
-	private void addRowToTable() {
+	/*public void addRowToTable() {
 		ArrayList<String[]> li = bank.getCustomer(currentIdNumber);
 		DefaultTableModel model = (DefaultTableModel) tableAccounts.getModel();
 		model.setRowCount(0);
@@ -499,25 +510,53 @@ public class Gui implements ActionListener {
 			}
 			model.addRow(rowData);
 		}
-	}
+	}*/
 	
 	private void addRowToCustomerTable() {
-		ArrayList<String[]> li = bank.getAllCustomers();
+		ArrayList<String[]> list = bank.getAllCustomers();
 		DefaultTableModel model = (DefaultTableModel) tableCustomers.getModel();
 		model.setRowCount(0);
 		model.setColumnCount(3);
 		Object rowData[] = new Object[5];
-		for(int i = 0; i < li.size(); i++) {
-			for(int y = 0; y < li.get(i).length; y++) {
-				rowData[y] = li.get(i)[y];
+		for(int i = 0; i < list.size(); i++) {
+			for(int y = 0; y < list.get(i).length; y++) {
+				rowData[y] = list.get(i)[y];
 			}
 			model.addRow(rowData);
 		}
 	}
 	
-	private void changeCustomerRow(String firstName, String lastName) {
+	/*private void changeCustomerRow(String firstName, String lastName) {
 		tableAccounts.setValueAt(firstName, 0, 1);
 		tableAccounts.setValueAt(lastName, 0, 2);
+	}*/
+	
+	public GuiCustomerView getCustomerView() {
+		return customerView;
+	}
+	
+	public void setCurrentIdNumber(String currentIdNumber) {
+		this.currentIdNumber = currentIdNumber;
+	}
+
+	public CardLayout getCardLayout() {
+		return cardLayout;
+	}
+
+	public Container getC() {
+		return c;
+	}
+
+	public GuiAccountView getAccountView() {
+		return accountView;
+	}
+
+	public String getCurrentAccountNumber() {
+		return currentAccountNumber;
+	}
+
+	public void setCurrentAccountNumber(String currentAccountNumber) {
+		this.currentAccountNumber = currentAccountNumber;
 	}
 
 }
