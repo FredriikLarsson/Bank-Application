@@ -2,7 +2,6 @@ package frelab8;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,11 +12,11 @@ import javax.swing.JTextField;
 
 public class GuiCustomerView {
 	Gui gui;
-	CustomerViewController customerViewController;
-	private JPanel mainPanel = new JPanel();
-	private JPanel accountsPanel = new JPanel();
-	private JPanel customerButtonPanel = new JPanel();
-	private JPanel changeCustomerNamePanel = new JPanel();
+	CustomerViewController customerViewController; //Vyns egna controller där lyssnaren finns för alla interaktionskomponenter.
+	private JPanel mainPanel = new JPanel(); //Huvudpanelen för denna vy som alla komponenter ska ligga inom.
+	private JPanel accountsPanel = new JPanel(); //Den panel där alla konton ska presenteras för en specifik kund.
+	private JPanel customerButtonPanel = new JPanel(); //Knappar som ska finnas i kundvyn.
+	private JPanel changeCustomerNamePanel = new JPanel(); //Den panel som innehåller interaktionskomponenterna för att byta namn på kund.
 	private JTextField changeFirstNameInput = new JTextField("Förnamn", 15);
 	private JTextField changeLastNameInput = new JTextField("Efternamn", 15);
 	private JButton deleteCustomerButton = new JButton("Ta bort kund");
@@ -25,8 +24,8 @@ public class GuiCustomerView {
 	private JButton chooseAccountButton = new JButton("Välj konto");
 	private JButton createCreditAccountButton = new JButton("Skapa kreditkonto");
 	private JButton createSavingsAccountButton = new JButton("Skapa sparkonto");
-	private JTable tableAccounts = new JTable();
-	private JList<Object> customerClosingInfo = new JList<Object>();
+	private JTable tableAccounts = new JTable(); //Tabell som ska innehålla alla konton för en specifik kund.
+	private JList<Object> customerClosingInfo = new JList<Object>(); //Information om en kund vid borttagning av kunden ur systemet.
 	
 	public GuiCustomerView(Gui gui, BankLogic bank) {
 		this.gui = gui;
@@ -55,6 +54,7 @@ public class GuiCustomerView {
 		changeCustomerNamePanel.add(changeFirstNameInput);
 		changeCustomerNamePanel.add(changeLastNameInput);
 		
+		//Alla dessa komponenter ska ligga inom samma vy.
 		c.gridx = 1;
 		c.gridy = 0;
 		mainPanel.add(customerButtonPanel, c);
@@ -90,21 +90,21 @@ public class GuiCustomerView {
 		return tableAccounts;
 	}
 
+	public JList<Object> getCustomerClosingInfo() {
+		return customerClosingInfo;
+	}
+	
+	public CustomerViewController getCustomerViewController() {
+		return customerViewController;
+	}
+	
 	public void changeCustomerName (String firstName, String lastName) {
 		tableAccounts.setValueAt(firstName, 0, 1);
 		tableAccounts.setValueAt(lastName, 0, 2);
 	}
 
-	public JList<Object> getCustomerClosingInfo() {
-		return customerClosingInfo;
-	}
-
 	public void setCustomerClosingInfo(Object[] list) {
 		this.customerClosingInfo = new JList<Object>(list);
-	}
-
-	public CustomerViewController getCustomerViewController() {
-		return customerViewController;
 	}
 	
 }
