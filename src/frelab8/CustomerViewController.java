@@ -31,7 +31,12 @@ public class CustomerViewController implements ActionListener {
 		switch(command) {
 		//Valt konto från en lista med konton.
 		case "chooseAccount":
-			currentAccountNumber = customerView.getTableAccounts().getValueAt(customerView.getTableAccounts().getSelectedRow(), 0).toString();
+			try {
+				currentAccountNumber = customerView.getTableAccounts().getValueAt(customerView.getTableAccounts().getSelectedRow(), 0).toString();
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(gui.frame, "Inget konto valt");
+				return;
+			}
 			//Ändra instansvariabeln i main gui klassen.
 			gui.setCurrentAccountNumber(currentAccountNumber);
 			//Sätter en ny ListModel för att rensa bort den gamla.
@@ -68,7 +73,7 @@ public class CustomerViewController implements ActionListener {
 			if(checkChange) {
 				JOptionPane.showMessageDialog(gui.frame, "Kundnamnet har ändrats");
 				//Kallar på en metod i kundVyn som ändrar namn på kunden i tabellen.
-				customerView.changeCustomerName(firstName, lastName);
+				addRowToTable();
 				accountListPanel.remove(customerView.getTableAccounts());
 				accountListPanel.add(customerView.getTableAccounts());
 				accountListPanel.revalidate();
@@ -82,7 +87,7 @@ public class CustomerViewController implements ActionListener {
 			//Hämtar en lista med konton hos den borttagna kunden.
 			Object[] list = bank.deleteCustomer(gui.currentIdNumber).toArray();
 			//Lägger till de hämtade kontona i en lista som håller information om den borttagna kunden.
-			customerView.setCustomerClosingInfo(list);
+			customerView.setCustomerClosingInfo(new JList<Object>(list));
 			//Presenterar den lista med information om den borttagna kunden och dennes konton.
 			JOptionPane.showMessageDialog(gui.frame, customerView.getCustomerClosingInfo());
 			//Lägger startVyn längst fram i cardlayouten.
@@ -120,14 +125,23 @@ public class CustomerViewController implements ActionListener {
 	public void addRowToTable() {
 		//Hämtar en ny lista med konton från den valda kunden.
 		ArrayList<String[]> list = bank.getCustomer(gui.currentIdNumber);
+		String customerInfo;
 		//Hämtar tabellens "tableModel"
 		DefaultTableModel model = (DefaultTableModel) customerView.getTableAccounts().getModel();
 		//Sätter radantalet till 0 för att rensa det gamla.
 		model.setRowCount(0);
 		model.setColumnCount(4);
-		Object rowData[] = new Object[5];
-		//Loopar igenom listan med konton och för in dessa i tabellen.
-		for(int i = 0; i < list.size(); i++) {
+		Object rowData[] = new Object[5]; //Data som ska representera alla konton i kontotabellen i kundvyn.
+		String rowDataCustomerInfo[] = new String[3]; //Data som ska representera information om kunden vilket ska placeras ovanför kontotabellen i kundvyn.
+		//För över kundinformation till "rowDataCustomerInfo" som finns på första platsen i arraylistan "list" som kommer från metoden bank.getCustomer.
+		rowDataCustomerInfo[0] = list.get(0)[0].toString();
+		rowDataCustomerInfo[1] = list.get(0)[1].toString();
+		rowDataCustomerInfo[2] = list.get(0)[2].toString();
+		customerInfo = rowDataCustomerInfo[0] + " " + rowDataCustomerInfo[1] + " " + rowDataCustomerInfo[2];
+		//Ändrar den text i JLabel som ligger ovanför kontotabellen i kundvyn.
+		customerView.setCustomerInfo(customerInfo);
+		//Loopar igenom listan med konton och för in dessa i tabellen, hoppar över första platsen i arraylistan "list" eftersom detta är kundinformation och inte ett konto.
+		for(int i = 1; i < list.size(); i++) {
 			for(int y = 0; y < list.get(i).length; y++) {
 				rowData[y] = list.get(i)[y];
 				}

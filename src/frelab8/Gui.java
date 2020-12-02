@@ -51,6 +51,9 @@ public class Gui implements ActionListener {
 		accountView = new GuiAccountView(this, bank);
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Meny");
+		JMenuItem searchCustomer = new JMenuItem("Sök kund");
+		searchCustomer.addActionListener(this);
+		searchCustomer.setActionCommand("searchCustomer");
 		JMenuItem getAllCustomer = new JMenuItem("Hämta alla kunder");
 		getAllCustomer.addActionListener(this);
 		getAllCustomer.setActionCommand("getAllCustomer");
@@ -96,6 +99,7 @@ public class Gui implements ActionListener {
 		
 		menuBar.add(menu); //Adderar den menu jag ska ha i mitt menyfält.
 		//Adderar menyobjekten i menyn för att kunna hämta alla kunder eller skapa en ny kund.
+		menu.add(searchCustomer);
 		menu.add(createCustomer);
 		menu.add(getAllCustomer);
 		frame.setSize(800, 600); //Fönstret "frame" ska ha storleken 800*600.
@@ -135,7 +139,12 @@ public class Gui implements ActionListener {
 			break;
 		case "chooseCustomer": //När man väljer en specifik kund i kundtabellen som presenterar alla kunder.
 			//Lägg till idNummer för vald kund, idNumret hämtas från kundtabellen från den valda raden i kolumn 0 där personnumren är placerade.
-			currentIdNumber = tableCustomers.getValueAt(tableCustomers.getSelectedRow(), 0).toString();
+			try {
+				currentIdNumber = tableCustomers.getValueAt(tableCustomers.getSelectedRow(), 0).toString();
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(frame, "Ingen kund vald");
+				return;
+			}
 			customerView.getCustomerViewController().addRowToTable(); //Kallar på en metod i kundvyns controller som gör att tabellen med en kunds alla konton tas bort och byggs om pånytt för den nu valda kunden.
 			customerView.getAccountsPanel().remove(customerView.getTableAccounts());
 			customerView.getAccountsPanel().add(customerView.getTableAccounts());
@@ -158,6 +167,9 @@ public class Gui implements ActionListener {
 				JOptionPane.showMessageDialog(frame, "Kunden kunde inte läggas till i systemet");
 			}
 			cardLayout.show(c, "startView"); //Lägger startvyn längst fram i cardlayouten.
+			break;
+		case "searchCustomer": //Lägger startvyn längst fram i cardlayouten, en väg tillbaka till startsidan ifall användaren befinner sig på andra sidor.
+			cardLayout.show(c, "startView");
 			break;
 		}
 	}

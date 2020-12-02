@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -15,10 +16,12 @@ public class GuiCustomerView {
 	CustomerViewController customerViewController; //Vyns egna controller där lyssnaren finns för alla interaktionskomponenter.
 	private JPanel mainPanel = new JPanel(); //Huvudpanelen för denna vy som alla komponenter ska ligga inom.
 	private JPanel accountsPanel = new JPanel(); //Den panel där alla konton ska presenteras för en specifik kund.
+	private JPanel customerPanel = new JPanel();
 	private JPanel customerButtonPanel = new JPanel(); //Knappar som ska finnas i kundvyn.
 	private JPanel changeCustomerNamePanel = new JPanel(); //Den panel som innehåller interaktionskomponenterna för att byta namn på kund.
 	private JTextField changeFirstNameInput = new JTextField("Förnamn", 15);
 	private JTextField changeLastNameInput = new JTextField("Efternamn", 15);
+	private JLabel customerInfo = new JLabel("Kund info");
 	private JButton deleteCustomerButton = new JButton("Ta bort kund");
 	private JButton changeCustomerNameButton = new JButton("Ändra kundnamn");
 	private JButton chooseAccountButton = new JButton("Välj konto");
@@ -35,6 +38,9 @@ public class GuiCustomerView {
 		accountsPanel.add(tableAccounts);
 		accountsPanel.setLayout(new BoxLayout(accountsPanel, BoxLayout.PAGE_AXIS));
 		accountsPanel.setBorder(BorderFactory.createTitledBorder("Konton"));
+		customerPanel.add(customerInfo);
+		customerPanel.add(accountsPanel);
+		customerPanel.setLayout(new BoxLayout(customerPanel, BoxLayout.PAGE_AXIS));
 		chooseAccountButton.addActionListener(customerViewController);
 		chooseAccountButton.setActionCommand("chooseAccount");
 		customerButtonPanel.setLayout(new BoxLayout(customerButtonPanel, BoxLayout.PAGE_AXIS));
@@ -60,7 +66,7 @@ public class GuiCustomerView {
 		mainPanel.add(customerButtonPanel, c);
 		c.gridx = 0;
 		c.gridy = 0;
-		mainPanel.add(accountsPanel, c);
+		mainPanel.add(customerPanel, c);
 		c.gridx = 0;
 		c.gridy = 1;
 		mainPanel.add(chooseAccountButton, c);
@@ -98,13 +104,12 @@ public class GuiCustomerView {
 		return customerViewController;
 	}
 	
-	public void changeCustomerName (String firstName, String lastName) {
-		tableAccounts.setValueAt(firstName, 0, 1);
-		tableAccounts.setValueAt(lastName, 0, 2);
+	public void setCustomerInfo(String customerInfo) {
+		this.customerInfo.setText(customerInfo);
 	}
 
-	public void setCustomerClosingInfo(Object[] list) {
-		this.customerClosingInfo = new JList<Object>(list);
+	public void setCustomerClosingInfo(JList<Object> list) {
+		this.customerClosingInfo = list;
 	}
 	
 }

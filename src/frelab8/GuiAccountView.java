@@ -3,7 +3,6 @@ package frelab8;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,24 +12,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class GuiAccountView {
-	BankLogic bank;
-	private Gui gui;
-	private JPanel mainPanel = new JPanel();
-	private JPanel accountPanel = new JPanel();
-	private JPanel accountButtonPanel = new JPanel();
+	private JPanel mainPanel = new JPanel(); //Huvudpanelen för kontoVyn "GuiAccountView".
+	private JPanel accountPanel = new JPanel(); //Panelen som ska innehålla information om ett konto (transaktioner).
+	private JPanel accountButtonPanel = new JPanel(); //Panel som ska hålla interaktionsknappar till det valda kontot.
 	private JButton deleteAccountButton = new JButton("Ta bort konto");
 	private JButton depositButton = new JButton("Sätt in pengar");
 	private JButton withdrawButton = new JButton("Ta ut pengar");
-	private JPanel amountPanel = new JPanel();
+	private JPanel amountPanel = new JPanel(); //Panel som innehåller interaktionskomponenter till den popupruta som ska låta användaren sätta in eller ta ut pengar från ett valt konto.
 	private JTextField amountInput = new JTextField(10);
-	private JLabel accountLabel = new JLabel();
-	private JList<Object> transactionInfo = new JList<Object>();
-	private JList<Object> accountClosingInfo = new JList<Object>();
+	private JLabel accountLabel = new JLabel(); //Information om det valda kontot (inte transaktioner).
+	private JList<Object> transactionInfo = new JList<Object>(); //Transaktioner på det valda kontot.
+	private JList<Object> accountClosingInfo = new JList<Object>(); //Information om kontot vid borttagning av kontot.
 	
 	public GuiAccountView(Gui gui, BankLogic bank) {
-		this.bank = bank;
-		this.gui = gui;
-		AccountViewController accountViewController = new AccountViewController(gui, this, bank);
+		AccountViewController accountViewController = new AccountViewController(gui, this, bank); //Controller till kontoVyn som ska hantera events i vyn.
 		GridBagConstraints c = new GridBagConstraints();
 		mainPanel.setLayout(new GridBagLayout());
 		accountPanel.add(transactionInfo);
@@ -63,15 +58,11 @@ public class GuiAccountView {
 	public JList<Object> getTransactionInfo() {
 		return transactionInfo;
 	}
-
-	public void setTransactionInfo(JList<Object> transactionInfo) {
-		this.transactionInfo = transactionInfo;
+	
+	public JPanel getMainPanel() {
+		return mainPanel;
 	}
-
-	public void setAccountLabel(String text) {
-		this.accountLabel.setText(text);
-	}
-
+	
 	public JPanel getAccountPanel() {
 		return accountPanel;
 	}
@@ -88,12 +79,16 @@ public class GuiAccountView {
 		return accountClosingInfo;
 	}
 
+	public void setTransactionInfo(JList<Object> transactionInfo) {
+		this.transactionInfo = transactionInfo;
+	}
+
+	public void setAccountLabel(String text) {
+		this.accountLabel.setText(text);
+	}
+
 	public void setAccountClosingInfo(JList<Object> accountClosingInfo) {
 		this.accountClosingInfo = accountClosingInfo;
 	}
-
-	public JPanel getMainPanel() {
-		return mainPanel;
-	}
-
+	
 }
