@@ -9,6 +9,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
+/*
+ * Denna klass är controllern som ska hantera all interaktion med kundvyn "GuiCustomerView".
+ * 
+ * @author Fredrik Larsson, frelab-8
+ */
+
 public class CustomerViewController implements ActionListener {
 	private BankLogic bank;
 	private Gui gui;

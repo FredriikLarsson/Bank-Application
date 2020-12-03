@@ -12,6 +12,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+/*
+ * Detta är startvyn med alla komponenter och hur dessa ska visas när användaren kommer till systemet (en sökruta man kan söka kunder i).
+ * 
+ * @author Fredrik Larsson, frelab-8
+ */
+
 public class GuiStartView {
 	private JPanel mainPanel = new JPanel(); //Den panel som ska vara huvudpanelen för denna startVy.
 	private JPanel welcomePanel = new JPanel();

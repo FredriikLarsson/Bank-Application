@@ -2,10 +2,15 @@ package frelab8;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+
+/*
+ * Denna klass är den controller som ska hantera all interaktion med kontovyn "GuiAccountView".
+ * 
+ * @author Fredrik Larsson, frelab-8
+ */
 
 public class AccountViewController implements ActionListener{
 	//Hämtar referenser till skapade instanser av BankLogic, Gui och GuiAccountView för att kunna manipulera dessa vyer beroende på olika händelser.

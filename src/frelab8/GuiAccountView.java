@@ -11,6 +11,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/*
+ * Detta är kontovyn som innehåller alla komponenter och hur dessa ska visas när ett specifikt konto är valt av användaren.
+ * 
+ * @author Fredrik Larsson, frelab-8
+ */
+
 public class GuiAccountView {
 	private JPanel mainPanel = new JPanel(); //Huvudpanelen för kontoVyn "GuiAccountView".
 	private JPanel accountPanel = new JPanel(); //Panelen som ska innehålla information om ett konto (transaktioner).

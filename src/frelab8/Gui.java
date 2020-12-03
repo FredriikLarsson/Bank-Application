@@ -20,7 +20,14 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel; 
+import javax.swing.table.DefaultTableModel;
+
+/*
+ * Denna klass är huvudvyn där menyn + menyns vyer finns tillsammans med den cardlayout som ska hantera navigationen i systemet.
+ * Klassen innehåller alltså instanser av alla andra vyer för att bestämma vilket vy som är aktiv (längst fram i cardlayouten).
+ * 
+ * @author Fredrik Larsson, frelab-8
+ */
 
 public class Gui implements ActionListener {
 	BankLogic bank = new BankLogic();

@@ -2,6 +2,8 @@ package frelab8;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -10,6 +12,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+
+/*
+ * Detta är kundvyn som inkluderar alla komponenter och hur dessa ska visas när en specifik kund är vald av användaren.
+ * 
+ * @author Fredrik Larsson, frelab-8
+ */
 
 public class GuiCustomerView {
 	Gui gui;
@@ -43,7 +51,7 @@ public class GuiCustomerView {
 		customerPanel.setLayout(new BoxLayout(customerPanel, BoxLayout.PAGE_AXIS));
 		chooseAccountButton.addActionListener(customerViewController);
 		chooseAccountButton.setActionCommand("chooseAccount");
-		customerButtonPanel.setLayout(new BoxLayout(customerButtonPanel, BoxLayout.PAGE_AXIS));
+		customerButtonPanel.setLayout(new GridLayout(4, 1, 10, 5));
 		customerButtonPanel.add(changeCustomerNameButton);
 		customerButtonPanel.add(deleteCustomerButton);
 		customerButtonPanel.add(createCreditAccountButton);
