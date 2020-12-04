@@ -25,7 +25,7 @@ public class GuiAccountView {
 	private JButton depositButton = new JButton("Sätt in pengar");
 	private JButton withdrawButton = new JButton("Ta ut pengar");
 	private JPanel amountPanel = new JPanel(); //Panel som innehåller interaktionskomponenter till den popupruta som ska låta användaren sätta in eller ta ut pengar från ett valt konto.
-	private JTextField amountInput = new JTextField(10);
+	private JTextField amountInput = new JTextField("Belopp", 10);
 	private JLabel accountLabel = new JLabel(); //Information om det valda kontot (inte transaktioner).
 	private JList<Object> transactionInfo = new JList<Object>(); //Transaktioner på det valda kontot.
 	private JList<Object> accountClosingInfo = new JList<Object>(); //Information om kontot vid borttagning av kontot.
