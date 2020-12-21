@@ -1,5 +1,6 @@
 package frelab8;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -9,13 +10,15 @@ import java.math.RoundingMode;
  * @author Fredrik Larsson, frelab-8
  */
 
-public class SavingsAccount extends Account {
+public class SavingsAccount extends Account implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private boolean freeWithdrawal = true; // Ifall kontot har kvar det fria uttaget som sparkonto har per år.
 	private static BigDecimal interestRate = new BigDecimal("1.0"); // Med antagandet att årsräntan ska vara samma för alla konton under denna kontotyp
 	private static BigDecimal withdrawalFee = new BigDecimal("2.0"); // Med antagandet att uttagsavgiften ska vara samma för alla konton under denna kontotyp
+	private String accountType = "Sparkonto";
 	
 	public SavingsAccount() {
-		super("Sparkonto");
+		super();
 	}
 	
 	/*
@@ -59,7 +62,7 @@ public class SavingsAccount extends Account {
 		String[] list = new String[4];
 		list[0] = Integer.toString(super.getAccountNumber());
 		list[1] = super.getBalance().toString();
-		list[2] = super.getAccountType();
+		list[2] = accountType;
 		list[3] = interestRate.toString();
 		
 		return list;
@@ -72,8 +75,8 @@ public class SavingsAccount extends Account {
 	public String[] getClosingAccountInfo() {
 		String[] list = new String[4];
 		list[0] = Integer.toString(super.getAccountNumber());
-		list[1] = super.getBalance().toString();
-		list[2] = super.getAccountType();
+		list[1] = getAccountBalance().toString();
+		list[2] = accountType;
 		list[3] = getCalculatedInterest();
 		return list;
 	}
@@ -85,6 +88,14 @@ public class SavingsAccount extends Account {
 	private String getCalculatedInterest() {
 		BigDecimal calculatedInterest = super.getBalance().multiply(interestRate.divide(new BigDecimal("100"))); // Tar kontobalansen "super.getBalance" och multiplicerar med räntesatsen "interestRate" dividerat med 100.
 		return "" + calculatedInterest.setScale(2, RoundingMode.HALF_EVEN);
+	}
+	
+	/*
+	 * Returnerar kontots balans.
+	 * @return balansen på kontot.
+	 */
+	public BigDecimal getAccountBalance() {
+		return super.getBalance();
 	}
 
 }

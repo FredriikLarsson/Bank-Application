@@ -18,27 +18,32 @@ import javax.swing.JTextField;
  */
 
 public class GuiAccountView {
+	private AccountViewController accountViewController; //Vyns "controller" klass.
 	private JPanel mainPanel = new JPanel(); //Huvudpanelen för kontoVyn "GuiAccountView".
 	private JPanel accountPanel = new JPanel(); //Panelen som ska innehålla information om ett konto (transaktioner).
 	private JPanel accountButtonPanel = new JPanel(); //Panel som ska hålla interaktionsknappar till det valda kontot.
 	private JButton deleteAccountButton = new JButton("Ta bort konto");
 	private JButton depositButton = new JButton("Sätt in pengar");
 	private JButton withdrawButton = new JButton("Ta ut pengar");
+	private JButton exportTransactionButton = new JButton("Exportera transaktioner");
 	private JPanel amountPanel = new JPanel(); //Panel som innehåller interaktionskomponenter till den popupruta som ska låta användaren sätta in eller ta ut pengar från ett valt konto.
 	private JTextField amountInput = new JTextField("Belopp", 10);
 	private JLabel accountLabel = new JLabel(); //Information om det valda kontot (inte transaktioner).
 	private JList<Object> transactionInfo = new JList<Object>(); //Transaktioner på det valda kontot.
 	private JList<Object> accountClosingInfo = new JList<Object>(); //Information om kontot vid borttagning av kontot.
-	
+
 	public GuiAccountView(Gui gui, BankLogic bank) {
-		AccountViewController accountViewController = new AccountViewController(gui, this, bank); //Controller till kontoVyn som ska hantera events i vyn.
+		accountViewController = new AccountViewController(gui, this, bank); //Controller till kontoVyn som ska hantera events i vyn.
 		GridBagConstraints c = new GridBagConstraints();
 		mainPanel.setLayout(new GridBagLayout());
 		accountPanel.add(transactionInfo);
 		accountButtonPanel.add(depositButton);
 		accountButtonPanel.add(withdrawButton);
 		accountButtonPanel.add(deleteAccountButton);
+		accountButtonPanel.add(exportTransactionButton);
 		accountButtonPanel.setLayout(new FlowLayout());
+		exportTransactionButton.setActionCommand("exportTransaction");
+		exportTransactionButton.addActionListener(accountViewController);
 		deleteAccountButton.setActionCommand("deleteAccount");
 		deleteAccountButton.addActionListener(accountViewController);
 		depositButton.setActionCommand("deposit");
@@ -83,6 +88,10 @@ public class GuiAccountView {
 
 	public JList<Object> getAccountClosingInfo() {
 		return accountClosingInfo;
+	}
+	
+	public AccountViewController getAccountViewController() {
+		return accountViewController;
 	}
 
 	public void setTransactionInfo(JList<Object> transactionInfo) {

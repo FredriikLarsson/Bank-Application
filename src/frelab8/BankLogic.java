@@ -1,6 +1,16 @@
 package frelab8;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /*
  * Denna klass hanterar logiken i banksystemet, det som systemet i funktionsväg ska kunna erbjuda användarna
@@ -230,6 +240,57 @@ public class BankLogic {
 		} else {
 			return account.getTransactionHistory();
 		}
+	}
+	
+	/*
+	 * Exporterar kunder i systemet till en fil.
+	 */
+	public void exportCustomer() throws IOException {
+		//Filen som kunderna ska exporteras till.
+		File file = new File("frelab8_files/customers.dat");
+		FileOutputStream fos = new FileOutputStream(file);
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		oos.writeObject(customers);
+		oos.close();
+		fos.close();
+	}
+	
+	/*
+	 * Importerar kunderna från en specifik fil till systemet.
+	 */
+	public void importCustomer() throws IOException, ClassNotFoundException {
+		//Filen som kunderna ska importeras från.
+		File file = new File("frelab8_files/customers.dat");
+		FileInputStream fis = new FileInputStream(file);
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		customers = (ArrayList<Customer>) ois.readObject();
+		ois.close();
+		fis.close();
+	}
+	
+	/*
+	 * Exporterar transaktioner för ett valt konto till en specifik fil.
+	 * @param idNumber, accountId är personnummer och kontonummer för det valda kontot.
+	 */
+	public void exportTransactionHistory(String idNumber, int accountId) throws IOException {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateTime = new Date(); //Dagens datum när transaktionerna skrivs ut till filen.
+		String date = dateFormat.format(dateTime);
+		//Transaktionerna som ska skrivas ut till filen.
+		ArrayList<String> transactionList = getAccountObject(idNumber, accountId).getTransactionHistory();
+		//Filen som transaktionerna ska skrivas ut till.
+		File file = new File("frelab8_files/transactions.txt");
+		file.createNewFile();
+		FileWriter fw = new FileWriter(file);
+		//Dagens datum när utskriften sker.
+		fw.write("Datum: " + date + "\n");
+		//Skriv ut alla transaktioner till filen på en ny rad.
+		for (int i = 0; i < transactionList.size(); i++) {
+			fw.write(transactionList.get(i) + "\n");
+		}
+		//Nuvarande saldo på kontot.
+		fw.write("Saldo: " + getAccountObject(idNumber, accountId).getAccountBalance().toString());
+		fw.close();
 	}
 
 	/*

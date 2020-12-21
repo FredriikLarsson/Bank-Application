@@ -1,5 +1,6 @@
 package frelab8;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -9,14 +10,16 @@ import java.math.RoundingMode;
  * @author Fredrik Larsson, frelab-8
  */
 
-public class CreditAccount extends Account {
+public class CreditAccount extends Account implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private BigDecimal creditLimit = new BigDecimal("5000");
 	private static BigDecimal interestRate = new BigDecimal("0.5");
 	private static BigDecimal loanFee = new BigDecimal("7.0");
 	private BigDecimal creditUsed = BigDecimal.ZERO.setScale(1, RoundingMode.HALF_EVEN);
+	private String accountType = "Kreditkonto";
 	
 	public CreditAccount() {
-		super("Kreditkonto");
+		super();
 	}
 	
 	/*
@@ -56,8 +59,8 @@ public class CreditAccount extends Account {
 	public String[] getAccountInfo() {
 		String[] list = new String[4];
 		list[0] = Integer.toString(super.getAccountNumber());
-		list[1] = getAccountBalance();
-		list[2] = super.getAccountType();
+		list[1] = getAccountBalance().toString();
+		list[2] = accountType;
 		//Kontrollerar ifall kontot har använt krediter
 		if(creditUsed.compareTo(BigDecimal.ZERO) > 0) {
 			list[3] = loanFee.toString();
@@ -75,8 +78,8 @@ public class CreditAccount extends Account {
 	public String[] getClosingAccountInfo() {
 		String[] list = new String[4];
 		list[0] = Integer.toString(super.getAccountNumber());
-		list[1] = getAccountBalance();
-		list[2] = super.getAccountType();
+		list[1] = getAccountBalance().toString();
+		list[2] = accountType;
 		list[3] = getCalculatedInterest();
 		return list;
 	}
@@ -102,12 +105,11 @@ public class CreditAccount extends Account {
 	 * @return om krediter är använda så returneras användakrediter konverterad till ett negativt värde
 	 * @return om krediter inte är använda så returneras superklassens positiva kontobalans
 	 */
-	private String getAccountBalance() {
+	public BigDecimal getAccountBalance() {
 		if(creditUsed.compareTo(BigDecimal.ZERO) > 0) {
-			return creditUsed.negate().toString();
+			return creditUsed.negate();
 		} else {
-			return super.getBalance().toString();
+			return super.getBalance();
 		}
 	}
-
 }

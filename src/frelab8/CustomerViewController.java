@@ -29,6 +29,7 @@ public class CustomerViewController implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Object[] transactionList; //Uppdaterad transaktionslista.
 		JList<Object> transactionInfo = gui.getAccountView().getTransactionInfo(); //Lista med transaktioner på ett valt konto.
 		JPanel accountPanel = gui.getAccountView().getAccountPanel(); //Panel i kontovyn.
 		JPanel accountListPanel = gui.getCustomerView().getAccountsPanel(); //Panel i kundvyn med alla kundens konton.
@@ -46,28 +47,19 @@ public class CustomerViewController implements ActionListener {
 			//Ändra instansvariabeln i main gui klassen.
 			gui.setCurrentAccountNumber(currentAccountNumber);
 			//Sätter en ny ListModel för att rensa bort den gamla.
-			gui.getAccountView().getTransactionInfo().setModel(new DefaultListModel());
+			transactionInfo.setModel(new DefaultListModel());
 			//Hämta transaktionerna till en array för ett specifikt konto.
-			Object[] transactionList = bank.getTransactions(gui.currentIdNumber, Integer.parseInt(currentAccountNumber)).toArray();
+			transactionList = bank.getTransactions(gui.currentIdNumber, Integer.parseInt(currentAccountNumber)).toArray();
 			//Uppdaterar kontovyns transaktionslist med en uppdaterad transaktionslista.
 			gui.getAccountView().setTransactionInfo(new JList<Object>(transactionList));
-			//Hämtar information om ett specfikt konto.
-			String[] accountInfo = bank.getAccount(gui.currentIdNumber, Integer.parseInt(currentAccountNumber));
-			String accountBalance = accountInfo[1];
-			String accountType = accountInfo[2];
-			String accountInterest = accountInfo[3];
-			//Presentera kontoinformationen via en label i kontoVyn.
-		try {
-			gui.getAccountView().setAccountLabel(currentAccountNumber + " " + accountBalance + "kr " + accountType + " " + accountInterest + "%");
-		} catch (NumberFormatException e1) {
-			System.out.println("Kontonumrets format ogiltigt");
-		}
-		accountPanel.remove(transactionInfo);
-		accountPanel.add(transactionInfo);
-		accountPanel.revalidate();
-		gui.frame.repaint();
-		gui.getCardLayout().show(gui.getC(), "accountView"); //Lägg kontovyn längst fram i cardlayouten.
-		break;
+			//Ändrar kontoinformationen på kontovyn.
+			gui.getAccountView().getAccountViewController().setAccountLabel(gui.currentIdNumber, currentAccountNumber);
+			accountPanel.remove(transactionInfo);
+			accountPanel.add(transactionInfo);
+			accountPanel.revalidate();
+			gui.frame.repaint();
+			gui.getCardLayout().show(gui.getC(), "accountView"); //Lägg kontovyn längst fram i cardlayouten.
+			break;
 		//Ändra namn på vald kund.
 		case "changeCustomerName":
 			//Lägg fram en popup ruta med en panel som låter användaren att ändra namn på kund.

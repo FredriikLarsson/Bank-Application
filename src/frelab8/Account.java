@@ -1,5 +1,6 @@
 package frelab8;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -10,11 +11,10 @@ import java.util.ArrayList;
  * @author Fredrik Larsson, frelab-8
  */
 
-public abstract class Account {
-	
+public abstract class Account implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private static int lastAssignedNumber = 1000; // Första kontot som skapas får nummer 1001.
 	private final int ACCOUNT_NUMBER; // Kontonummer bör inte kunna ändras efter skapandet av kontot därav "final"
-	private final String ACCOUNT_TYPE; // Med antagandet att kontotyp på ett konto aldrig ska kunna ändras, därav final.
 	private BigDecimal balance = BigDecimal.ZERO.setScale(1, RoundingMode.HALF_EVEN); // Kontobalansen satt till 0 som standard och innehar 1 decimals precision och rundar av till närmsta 50öre.
 	private ArrayList<Transaction> transactionHistory = new ArrayList<Transaction>(); // Lista med alla transaktioner som gjorts på kontot
 	
@@ -23,8 +23,7 @@ public abstract class Account {
 	 * Varje nytt konto får ett kontonummer som är + 1 högre än det föregående som skapades.
 	 * @return ett nytt konto objekt.
 	 */
-	public Account(String accountType) {
-		this.ACCOUNT_TYPE = accountType;
+	public Account() {
 		this.ACCOUNT_NUMBER = lastAssignedNumber + 1;
 		lastAssignedNumber += 1;
 	}
@@ -93,13 +92,7 @@ public abstract class Account {
 		return transactionList;
 	}
 	
-	/*
-	 * Hämtar vad för typ av konto som det nuvarande kontot är
-	 * @return typ av konto i form av en sträng
-	 */
-	public String getAccountType() {
-		return ACCOUNT_TYPE;
-	}
+	public abstract BigDecimal getAccountBalance();
 	
 	public abstract boolean setBalanceWithdrawal(double amount);
 	

@@ -1,5 +1,6 @@
 package frelab8;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -9,8 +10,8 @@ import java.util.Arrays;
  * @author Fredrik Larsson, frelab-8
  */
 
-public class Customer {
-
+public class Customer implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String firstName;
 	private String lastName;
 	private final String ID_NUMBER;

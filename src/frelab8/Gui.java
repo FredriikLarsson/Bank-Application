@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -67,6 +68,12 @@ public class Gui implements ActionListener {
 		JMenuItem createCustomer = new JMenuItem("Skapa ny kund");
 		createCustomer.addActionListener(this);
 		createCustomer.setActionCommand("createCustomer");
+		JMenuItem exportCustomer = new JMenuItem("Exportera kunder");
+		exportCustomer.addActionListener(this);
+		exportCustomer.setActionCommand("exportCustomer");
+		JMenuItem importCustomer = new JMenuItem("importera kunder");
+		importCustomer.addActionListener(this);
+		importCustomer.setActionCommand("importCustomer");
 		GridBagConstraints cGrid = new GridBagConstraints(); //Skapar en GridBagConstraints för GridBagLayout används i olika paneler på systemet.
 		
 		//Lägger till de komponenter som ska finnas med när man vill hämta alla kunder.
@@ -109,6 +116,8 @@ public class Gui implements ActionListener {
 		menu.add(searchCustomer);
 		menu.add(createCustomer);
 		menu.add(getAllCustomer);
+		menu.add(importCustomer);
+		menu.add(exportCustomer);
 		frame.setSize(800, 600); //Fönstret "frame" ska ha storleken 800*600.
 		frame.setJMenuBar(menuBar);//Fönstret ska ha menufältet "menuBar".
 		//Här adderas alla olika vyer i systemet till container "c" som refererar till fönstrets "content pane" som har layouten "cardlayout".
@@ -178,6 +187,32 @@ public class Gui implements ActionListener {
 		case "searchCustomer": //Lägger startvyn längst fram i cardlayouten, en väg tillbaka till startsidan ifall användaren befinner sig på andra sidor.
 			cardLayout.show(c, "startView");
 			break;
+		case "importCustomer": //Importerar kunderna från en fil.
+			try {
+				//Importerar kunderna från en fil till systemet.
+				bank.importCustomer();
+			} catch (ClassNotFoundException e2) {
+				JOptionPane.showMessageDialog(frame, "Filen kunde inte hittas");
+				e2.printStackTrace();
+				break;
+			} catch (IOException e2) {
+				JOptionPane.showMessageDialog(frame, "Kunderna kunde inte importeras från filen");
+				e2.printStackTrace();
+				break;
+			}
+			JOptionPane.showMessageDialog(frame, "Kunderna har nu importerats från filen");
+			break;
+		case "exportCustomer": //Exporterar kunderna till en fil.
+			try {
+				//Exporterar kunderna till en fil från systemet.
+				bank.exportCustomer();
+			} catch (IOException e1) {
+				JOptionPane.showMessageDialog(frame, "Kunderna kunde inte exporteras till filen");
+				e1.printStackTrace();
+				break;
+			}
+			JOptionPane.showMessageDialog(frame, "Kunderna har nu exporterats och lagrats i filen");
+			break;
 		}
 	}
 	
@@ -195,11 +230,6 @@ public class Gui implements ActionListener {
 			model.addRow(rowData);
 		}
 	}
-	
-	/*private void changeCustomerRow(String firstName, String lastName) {
-		tableAccounts.setValueAt(firstName, 0, 1);
-		tableAccounts.setValueAt(lastName, 0, 2);
-	}*/
 	
 	public GuiCustomerView getCustomerView() {
 		return customerView;
@@ -227,6 +257,10 @@ public class Gui implements ActionListener {
 	
 	public void setCurrentIdNumber(String currentIdNumber) {
 		this.currentIdNumber = currentIdNumber;
+	}
+	
+	public String getCurrentIdNumber() {
+		return this.currentIdNumber;
 	}
 	
 }

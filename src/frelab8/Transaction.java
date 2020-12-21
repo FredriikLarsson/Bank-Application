@@ -1,5 +1,6 @@
 package frelab8;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,7 +11,8 @@ import java.util.Date;
  * @author Fredrik Larsson, frelab-8
  */
 
-public class Transaction {
+public class Transaction implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Date dateTime = new Date(); // Datum och tid när transaktionen inträffade
 	private String amount; // Summa för transaktionen
 	private String balanceAfter; // Balansen på kontot efter transaktionen
