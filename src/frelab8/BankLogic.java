@@ -271,15 +271,16 @@ public class BankLogic {
 	/*
 	 * Exporterar transaktioner för ett valt konto till en specifik fil.
 	 * @param idNumber, accountId är personnummer och kontonummer för det valda kontot.
+	 * @param filePath är sökvägen till filen som transaktionerna ska sparas till.
 	 */
-	public void exportTransactionHistory(String idNumber, int accountId) throws IOException {
+	public void exportTransactionHistory(String idNumber, int accountId, String filePath) throws IOException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date dateTime = new Date(); //Dagens datum när transaktionerna skrivs ut till filen.
 		String date = dateFormat.format(dateTime);
 		//Transaktionerna som ska skrivas ut till filen.
 		ArrayList<String> transactionList = getAccountObject(idNumber, accountId).getTransactionHistory();
 		//Filen som transaktionerna ska skrivas ut till.
-		File file = new File("frelab8_files/transactions.txt");
+		File file = new File(filePath);
 		file.createNewFile();
 		FileWriter fw = new FileWriter(file);
 		//Dagens datum när utskriften sker.

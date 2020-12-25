@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -31,6 +32,7 @@ public class GuiAccountView {
 	private JLabel accountLabel = new JLabel(); //Information om det valda kontot (inte transaktioner).
 	private JList<Object> transactionInfo = new JList<Object>(); //Transaktioner på det valda kontot.
 	private JList<Object> accountClosingInfo = new JList<Object>(); //Information om kontot vid borttagning av kontot.
+	JFileChooser txFileChooser = new JFileChooser();
 
 	public GuiAccountView(Gui gui, BankLogic bank) {
 		accountViewController = new AccountViewController(gui, this, bank); //Controller till kontoVyn som ska hantera events i vyn.
@@ -92,6 +94,10 @@ public class GuiAccountView {
 	
 	public AccountViewController getAccountViewController() {
 		return accountViewController;
+	}
+	
+	public JFileChooser getTxFileChooser() {
+		return txFileChooser;
 	}
 
 	public void setTransactionInfo(JList<Object> transactionInfo) {

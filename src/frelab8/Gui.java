@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -74,6 +75,7 @@ public class Gui implements ActionListener {
 		JMenuItem importCustomer = new JMenuItem("importera kunder");
 		importCustomer.addActionListener(this);
 		importCustomer.setActionCommand("importCustomer");
+		JFileChooser fc = new JFileChooser();
 		GridBagConstraints cGrid = new GridBagConstraints(); //Skapar en GridBagConstraints för GridBagLayout används i olika paneler på systemet.
 		
 		//Lägger till de komponenter som ska finnas med när man vill hämta alla kunder.

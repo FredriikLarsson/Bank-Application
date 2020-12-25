@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
@@ -99,12 +100,21 @@ public class AccountViewController implements ActionListener {
 			gui.getCardLayout().show(gui.getC(), "customerView");
 			break;
 		case "exportTransaction": //Exporterar transaktionerna på kontot till en textfil.
-			try {
-				bank.exportTransactionHistory(gui.getCurrentIdNumber(), Integer.parseInt(currentAccountNumber));
-			} catch (NumberFormatException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			int choosenDir = accountView.getTxFileChooser().showSaveDialog(gui.frame);
+			//Sparar sökvägen på den fil som transaktionerna ska lagras i.
+			String filePath;
+			//Ifall användaren väljer spara i dialogen.
+			if(choosenDir == JFileChooser.APPROVE_OPTION) {
+				//Lagra sökvägen från FileChoosers valda fils sökväg.
+				filePath = accountView.getTxFileChooser().getSelectedFile().getPath();
+				try {
+					//Exportera transaktionshistoriken från konto.
+					bank.exportTransactionHistory(gui.getCurrentIdNumber(), Integer.parseInt(currentAccountNumber), filePath);
+				} catch (NumberFormatException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 			break;
 		}

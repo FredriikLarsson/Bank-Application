@@ -30,7 +30,6 @@ public class CustomerViewController implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object[] transactionList; //Uppdaterad transaktionslista.
-		JList<Object> transactionInfo = gui.getAccountView().getTransactionInfo(); //Lista med transaktioner på ett valt konto.
 		JPanel accountPanel = gui.getAccountView().getAccountPanel(); //Panel i kontovyn.
 		JPanel accountListPanel = gui.getCustomerView().getAccountsPanel(); //Panel i kundvyn med alla kundens konton.
 		String command = e.getActionCommand();
@@ -47,15 +46,15 @@ public class CustomerViewController implements ActionListener {
 			//Ändra instansvariabeln i main gui klassen.
 			gui.setCurrentAccountNumber(currentAccountNumber);
 			//Sätter en ny ListModel för att rensa bort den gamla.
-			transactionInfo.setModel(new DefaultListModel());
+			gui.getAccountView().getTransactionInfo().setModel(new DefaultListModel());
 			//Hämta transaktionerna till en array för ett specifikt konto.
 			transactionList = bank.getTransactions(gui.currentIdNumber, Integer.parseInt(currentAccountNumber)).toArray();
 			//Uppdaterar kontovyns transaktionslist med en uppdaterad transaktionslista.
 			gui.getAccountView().setTransactionInfo(new JList<Object>(transactionList));
 			//Ändrar kontoinformationen på kontovyn.
 			gui.getAccountView().getAccountViewController().setAccountLabel(gui.currentIdNumber, currentAccountNumber);
-			accountPanel.remove(transactionInfo);
-			accountPanel.add(transactionInfo);
+			accountPanel.remove(gui.getAccountView().getTransactionInfo());
+			accountPanel.add(gui.getAccountView().getTransactionInfo());
 			accountPanel.revalidate();
 			gui.frame.repaint();
 			gui.getCardLayout().show(gui.getC(), "accountView"); //Lägg kontovyn längst fram i cardlayouten.
