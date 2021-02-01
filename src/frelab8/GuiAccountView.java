@@ -3,6 +3,8 @@ package frelab8;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.File;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -97,6 +99,7 @@ public class GuiAccountView {
 	}
 	
 	public JFileChooser getTxFileChooser() {
+		txFileChooser.setCurrentDirectory(new File("frelab8_files"));
 		return txFileChooser;
 	}
 

@@ -37,7 +37,13 @@ public class AccountViewController implements ActionListener {
 			JOptionPane.showMessageDialog(gui.frame, accountView.getAmountPanel()); //Skapar en dialog ruta som innehåller "getAmountPanel" med tillgång till text input med hur mycket användaren vill sätta in.
 			String amount = accountView.getAmountInput().getText(); //Hämtar inputen om summa som användaren vill sätta in på kontot.
 			//Lägger in pengar på nuvarande kundnummer och valt konto med den summa pengar som användaren har fyllt i.
-			Boolean checkAmount = bank.deposit(gui.currentIdNumber, Integer.parseInt(currentAccountNumber), Double.parseDouble(amount));
+			Boolean checkAmount;
+			try {
+				checkAmount = bank.deposit(gui.currentIdNumber, Integer.parseInt(currentAccountNumber), Double.parseDouble(amount));
+			} catch (NumberFormatException e2) {
+				checkAmount = false;
+				e2.printStackTrace();
+			}
 			//Kontrollerar ifall insättningen lyckades.
 			if(checkAmount) {
 				//Nollställer den nuvarande transaktionslistan i kontoVyn.
@@ -63,7 +69,13 @@ public class AccountViewController implements ActionListener {
 			//Hämtar inputen om summa som användaren vill ta ut från kontot.
 			String amountWithdraw = accountView.getAmountInput().getText();
 			//Tar ut pengar från nuvarande kundnummer och valt konto med den summa pengar som användaren har fyllt i.
-			Boolean checkAmountWithdraw = bank.withdraw(gui.currentIdNumber, Integer.parseInt(currentAccountNumber), Double.parseDouble(amountWithdraw));
+			Boolean checkAmountWithdraw;
+			try {
+				checkAmountWithdraw = bank.withdraw(gui.currentIdNumber, Integer.parseInt(currentAccountNumber), Double.parseDouble(amountWithdraw));
+			} catch (NumberFormatException e2) {
+				checkAmountWithdraw = false;
+				e2.printStackTrace();
+			}
 			//Kontrollerar ifall uttaget lyckades.
 			if(checkAmountWithdraw) {
 				//Nollställer den nuvarande transaktionslistan i kontoVyn.

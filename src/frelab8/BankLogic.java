@@ -191,7 +191,7 @@ public class BankLogic {
 	 * in
 	 * @return sant/falskt över hur insättningen gick, ifall den lyckades eller inte
 	 */
-	public boolean deposit(String idNumber, int accountId, double amount) {
+	public boolean deposit(String idNumber, int accountId, double amount) throws NumberFormatException {
 		Account account = getAccountObject(idNumber, accountId);
 		if (amount > 0) {
 			// Kontrollerar ifall kontot och kontoägare existerar i banksystemet
@@ -213,7 +213,7 @@ public class BankLogic {
 	 * tas ut
 	 * @return sant/falskt över hur uttaget gick, ifall den lyckades eller inte
 	 */
-	public boolean withdraw(String idNumber, int accountId, double amount) {
+	public boolean withdraw(String idNumber, int accountId, double amount) throws NumberFormatException {
 		Account account = getAccountObject(idNumber, accountId);
 		if (amount > 0) {
 			// Kontrollerar ifall kontot och kontoägaren existerar i banksystemet

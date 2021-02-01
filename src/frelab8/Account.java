@@ -1,5 +1,7 @@
 package frelab8;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -90,6 +92,17 @@ public abstract class Account implements Serializable {
 			transactionList.add(transactionHistory.get(i).getTransactionInfo());
 		}
 		return transactionList;
+	}
+	
+	/*
+	 * När ett objekt läses in från objectInputStream och ifall objektets kontonummer är högre än klassvariabeln "lastAssignedNumber"
+	 * så ändrar vi lastAssignedNumber till objektetskontonummer.
+	 */
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+		in.defaultReadObject();
+		if (ACCOUNT_NUMBER > lastAssignedNumber) {
+			lastAssignedNumber = ACCOUNT_NUMBER;
+		}
 	}
 	
 	public abstract BigDecimal getAccountBalance();
